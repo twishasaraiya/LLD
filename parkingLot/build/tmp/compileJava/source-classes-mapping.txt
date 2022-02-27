@@ -1,0 +1,23 @@
+enums/VehicleType.java
+ enums.VehicleType
+model/ParkingFloor.java
+ model.ParkingFloor
+ model.ParkingSpotFactory
+model/Ticket.java
+ model.Ticket
+model/Vehicle.java
+ model.Vehicle
+enums/SpotType.java
+ enums.SpotType
+constants/ApplicationConstants.java
+ constants.ApplicationConstants
+enums/TicketStatus.java
+ enums.TicketStatus
+Exception/SpotNotFound.java
+ Exception.SpotNotFound
+model/ParkingSpot.java
+ model.ParkingSpot
+startup/ApplicationDemo.java
+ startup.ApplicationDemo
+model/ParkingLot.java
+ model.ParkingLot
