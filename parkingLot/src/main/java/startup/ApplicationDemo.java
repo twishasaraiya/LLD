@@ -2,6 +2,8 @@ package startup;
 
 import enums.VehicleType;
 import model.ParkingLot;
+import model.Ticket;
+import model.Vehicle;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -33,7 +35,7 @@ public class ApplicationDemo {
                     parkingLot.unParkVehicle(cmd[1]);
                     break;
                 case "display":
-                    parkingLot.display(cmd[1], VehicleType.valueOf(cmd[2]));
+                    parkingLot.display(cmd[1], cmd[2]);
                     break;
                 case "exit":
                     return;

@@ -21,6 +21,10 @@ public class Ticket {
         return ticketStatus;
     }
 
+    public Integer getSpotId() {
+        return spotId;
+    }
+
     public void updateTicketStatus(TicketStatus ticketStatus) {
         this.ticketStatus = ticketStatus;
     }
