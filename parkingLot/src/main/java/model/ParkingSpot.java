@@ -4,14 +4,16 @@ import enums.SpotType;
 
 public class ParkingSpot {
     private Integer spotId;
+    private Integer floorId;
     private SpotType spotType;
-    private Boolean isAvailable;
+    private Boolean availableStatus;
     private Vehicle vehicle;
 
-    public ParkingSpot(Integer spotId, SpotType spotType, Boolean isAvailable) {
+    public ParkingSpot(Integer spotId, Integer floorId, SpotType spotType, Boolean availableStatus) {
         this.spotId = spotId;
+        this.floorId = floorId;
         this.spotType = spotType;
-        this.isAvailable = isAvailable;
+        this.availableStatus = availableStatus;
         this.vehicle = null;
     }
 
@@ -19,25 +21,33 @@ public class ParkingSpot {
         return spotId;
     }
 
+    public Integer getFloorId() {
+        return floorId;
+    }
+
     public SpotType getSpotType() {
         return spotType;
     }
 
-    public Boolean getAvailable() {
-        return isAvailable;
-    }
-
-    public void updateAvailableStatus(Boolean available) {
-        isAvailable = available;
-    }
-
-    public void assignVehicle(Vehicle vehicle){
-        this.vehicle = vehicle;
+    public Boolean isAvailable() {
+        return availableStatus;
     }
 
     public Vehicle getVehicle() {
         return vehicle;
     }
+
+    public void assignVehicle(Vehicle vehicle){
+        this.vehicle = vehicle;
+        this.availableStatus = Boolean.FALSE;
+    }
+
+    public void removeVehicle(){
+        this.vehicle = null;
+        this.availableStatus = Boolean.TRUE;
+    }
+
+
 
 
 }
