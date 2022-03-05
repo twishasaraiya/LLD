@@ -37,7 +37,7 @@ public class ParkingSpot {
         return vehicle;
     }
 
-    public void assignVehicle(Vehicle vehicle){
+    public synchronized void assignVehicle(Vehicle vehicle){
         this.vehicle = vehicle;
         this.availableStatus = Boolean.FALSE;
     }

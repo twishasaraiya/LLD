@@ -15,6 +15,10 @@ import java.io.InputStreamReader;
  * 1. Apply different design pattern
  * 2. Thread safe??
  */
+
+/**
+ * Command pattern here
+ */
 public class ApplicationDemo {
     public static void main(String[] args) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
