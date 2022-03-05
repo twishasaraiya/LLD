@@ -9,12 +9,12 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+// can be singleton
 public class ParkingLot {
     private String id;
     private Integer numFloors;
     private Map<Integer, ParkingFloor> parkingFloors;
     private Map<String, ParkingSpot> issuedTickets;
-
 
     private ParkingLot(String parkingLotId, Integer numFloors, Integer numSpotPerFloor) {
         this.id = parkingLotId;
@@ -79,6 +79,7 @@ public class ParkingLot {
         }
     }
 
+    // can be moved to strategy class
     private ParkingSpot findNearestSpotForVehicleType(VehicleType vehicleType){
         ParkingSpot parkingSpot = null;
         for(int i=1; i<=numFloors; i++){
