@@ -1,5 +1,6 @@
 package model;
 
+import enums.DisplayType;
 import enums.TicketStatus;
 import enums.VehicleType;
 
@@ -11,91 +12,83 @@ import java.util.Map;
 public class ParkingLot {
     private String id;
     private Integer numFloors;
-    private List<ParkingFloor> parkingFloors;
-    private Map<String, ParkingSpot> spotMap;
+    private Map<Integer, ParkingFloor> parkingFloors;
+    private Map<String, ParkingSpot> issuedTickets;
 
-    public ParkingLot(String parkingLotId, Integer numFloors, List<ParkingFloor> parkingFloorList) {
+
+    private ParkingLot(String parkingLotId, Integer numFloors, Integer numSpotPerFloor) {
         this.id = parkingLotId;
         this.numFloors = numFloors;
-        this.parkingFloors = parkingFloorList;
-        this.spotMap = new HashMap<>();
+        this.parkingFloors = new HashMap<>(numFloors);
+        this.issuedTickets = new HashMap<>();
+        for (int i = 1; i <=numFloors; i++) {
+            parkingFloors.put(i, new ParkingFloor(i, numSpotPerFloor));
+        }
     }
 
     public String getId() {
         return id;
     }
 
-    public void setId(String id) {
-        this.id = id;
-    }
-
-    public List<ParkingFloor> getParkingFloors() {
-        return parkingFloors;
-    }
-
-    public void setParkingFloors(List<ParkingFloor> parkingFloors) {
-        this.parkingFloors = parkingFloors;
-    }
 
     public static ParkingLot createParkingLot(String parkingLotId, Integer numFloors, Integer numSpotPerFloor){
-        List<ParkingFloor> parkingFloors = new ArrayList<>(numFloors);
-        for (int i = 1; i <=numFloors; i++) {
-            parkingFloors.add(new ParkingFloor(i, numSpotPerFloor));
-        }
-        ParkingLot parkingLot = new ParkingLot(parkingLotId, numFloors, parkingFloors);
-        System.out.println("Created parking lot with " + numFloors + "floors and " +numSpotPerFloor +" slots per floor");
+
+        ParkingLot parkingLot = new ParkingLot(parkingLotId, numFloors, numSpotPerFloor);
+        System.out.println("Created parking lot with " + numFloors + " floors and " +numSpotPerFloor +" slots per floor");
         return parkingLot;
     }
 
     public Ticket parkVehicle(VehicleType vehicleType, String registrationNum, String color){
         // find slot
-        for (ParkingFloor floor:
-             parkingFloors) {
-            ParkingSpot spot = floor.getNearestAvailableSpot(vehicleType);
-            if(spot != null) {
-                String ticketId = id + "_" + floor.getFloorNumber() + "_" + spot.getSpotId();
-                Vehicle vehicle = new Vehicle(registrationNum, color, vehicleType);
-                Ticket ticket = new Ticket(ticketId, TicketStatus.ISSUED, spot.getSpotId());
-                spot.updateAvailableStatus(Boolean.FALSE);
-                spot.assignVehicle(vehicle);
-                spotMap.put(ticketId, spot);
-                System.out.println("Parked vehicle. Ticket ID: " + ticketId);
-                return ticket;
-            }
+        Ticket ticket = null;
+        ParkingSpot parkingSpot = findNearestSpotForVehicleType(vehicleType);
+        if(parkingSpot == null){
+            System.out.println("Parking Lot Full");
         }
-        throw new RuntimeException("Spot not found");
+        else{
+            Vehicle vehicle = new Vehicle(registrationNum, color, vehicleType);
+            String ticketId = id+"_"+parkingSpot.getFloorId()+"_"+parkingSpot.getSpotId();
+            ticket = new Ticket(ticketId, TicketStatus.ISSUED, parkingSpot.getSpotId());
+            issuedTickets.put(ticketId, parkingSpot);
+
+//            parkingSpot.assignVehicle(vehicle);
+            parkingFloors.get(parkingSpot.getFloorId()).assignVehicleToSpot(vehicle, parkingSpot);
+            System.out.print("Parked vehicle. Ticket ID: " +ticketId);
+        }
+        return ticket;
     }
 
     public Vehicle unParkVehicle(String ticketId){
-        ParkingSpot spot = spotMap.getOrDefault(ticketId, null);
-        if(spot == null || spot.getAvailable().equals(Boolean.TRUE)){
-            throw new RuntimeException("Invalid ticket");
+        if(!issuedTickets.containsKey(ticketId)){
+            System.out.println("Invalid Ticket");
+            return null;
         }
-        spot.updateAvailableStatus(Boolean.TRUE);
-        System.out.println("Unparked vehicle with Registration Number: " +  spot.getVehicle().getRegistrationNumber() + " and Color: " + spot.getVehicle().getColor());
-        spot.assignVehicle(null);
-        return spot.getVehicle();
+        ParkingSpot parkingSpot = issuedTickets.get(ticketId);
+        Vehicle vehicle = parkingSpot.getVehicle();
+//        parkingSpot.removeVehicle();
+        parkingFloors.get(parkingSpot.getFloorId()).removeVehicleFromSpot(parkingSpot);
+        issuedTickets.remove(ticketId);
+        // ToDo: Change ticket status to PAID
+        System.out.println("Unparked vehicle with Registration Number: " + vehicle.getRegistrationNumber()+"and Color: "+vehicle.getColor());
+        return vehicle;
     }
 
-    public void display(String displayType, VehicleType vehicleType){
-        System.out.println("display " + displayType + " " + vehicleType);
-        switch (displayType){
-            case "free_count":
-                for (ParkingFloor floor: parkingFloors) {
-                    floor.displayFreeSlotCount(vehicleType);
-                }
-                break;
-            case "free_slots":
-                for (ParkingFloor floor: parkingFloors) {
-                    floor.displayFreeSlots(vehicleType);
-                }
-                break;
-            case "occupied_slots":
-                for (ParkingFloor floor: parkingFloors) {
-                    floor.displayOccupiedSlots(vehicleType);
-                }
-                break;
+    public void display(String displayType, String vehicleType){
+        for(ParkingFloor parkingFloor: parkingFloors.values()){
+            parkingFloor.displayFloorBoard(DisplayType.getDisplayType(displayType), VehicleType.valueOf(vehicleType));
         }
     }
-}
+
+    private ParkingSpot findNearestSpotForVehicleType(VehicleType vehicleType){
+        ParkingSpot parkingSpot = null;
+        for(int i=1; i<=numFloors; i++){
+            if(parkingFloors.get(i).getAvailableSpot(vehicleType) != null){
+                parkingSpot = parkingFloors.get(i).getAvailableSpot(vehicleType);
+                break;
+            }
+        }
+        return parkingSpot;
+    }
+
+ }
 

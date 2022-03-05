@@ -1,94 +1,110 @@
 package model;
 
 import constants.ApplicationConstants;
+import enums.DisplayType;
 import enums.SpotType;
 import enums.VehicleType;
+import factory.ParkingSpotFactory;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Set;
+import java.util.TreeSet;
 
 public class ParkingFloor {
-    private Integer floorNumber;
+    private Integer floorId;
     private Integer numSpots;
-    private List<ParkingSpot> parkingSpots;
+    private Map<Integer, ParkingSpot> spotMap;
+    private Map<SpotType, Set<Integer>> availableSpotsMap;
+    private Map<SpotType, Set<Integer>> occupiedSpotsMap;
 
-    public ParkingFloor(Integer floorNumber, Integer numSpots) {
-        this.floorNumber = floorNumber;
+
+    public ParkingFloor(Integer floorId, Integer numSpots) {
+        this.floorId = floorId;
         this.numSpots = numSpots;
-        this.parkingSpots = createParkingSpots(numSpots);
-    }
-
-    public Integer getFloorNumber() {
-        return floorNumber;
-    }
-
-    public List<ParkingSpot> getParkingSpots() {
-        return parkingSpots;
-    }
-
-    public List<ParkingSpot> createParkingSpots(int num){
-        List<ParkingSpot> parkingSpotList = new ArrayList<>(numSpots);
-        for (int i = 1; i <= num; i++) {
-            parkingSpotList.add(ParkingSpotFactory.createSpot(i));  // FACTORY
+        this.spotMap = new HashMap<>();
+        this.availableSpotsMap = new HashMap<>();
+        this.occupiedSpotsMap = new HashMap<>();
+        for(SpotType spotType: SpotType.values()){
+            availableSpotsMap.put(spotType, new TreeSet<>());
+            occupiedSpotsMap.put(spotType, new TreeSet<>());
         }
-        return parkingSpotList;
+        createParkingSpots();
     }
 
-    public ParkingFloor createFloor(int numSpotsPerFloor){
-        return new ParkingFloor(1, numSpotsPerFloor);
+    private void createParkingSpots(){
+        for(int i=1; i<=numSpots; i++){
+            ParkingSpot parkingSpot = ParkingSpotFactory.createSpot(i, floorId);
+            spotMap.put(parkingSpot.getSpotId(), parkingSpot);
+            availableSpotsMap.get(parkingSpot.getSpotType()).add(parkingSpot.getSpotId());
+        }
     }
 
-    public ParkingSpot getNearestAvailableSpot(VehicleType vehicleType){
-        for (ParkingSpot spot:
-             parkingSpots) {
-            if(spot.getAvailable() && spot.getSpotType().toString().equals(vehicleType.toString())){
-                return spot;
-            }
+    public void addParkingSot(ParkingSpot parkingSpot){
+        spotMap.putIfAbsent(parkingSpot.getSpotId(), parkingSpot);
+        if(parkingSpot.isAvailable()){
+            availableSpotsMap.get(parkingSpot.getSpotType()).add(parkingSpot.getSpotId());
+        }
+        else{
+            occupiedSpotsMap.get(parkingSpot.getSpotType()).add(parkingSpot.getSpotId());
+        }
+    }
+
+    public Integer getFloorId() {
+        return floorId;
+    }
+
+
+    public ParkingSpot getAvailableSpot(VehicleType vehicleType){
+        for(Integer spotId: availableSpotsMap.get(ApplicationConstants.vehicleTypeToSpotType.get(vehicleType))){
+            return spotMap.get(spotId);
         }
         return null;
     }
-    public void displayFreeSlots(VehicleType vehicleType){
-        System.out.println("Free slots for " + vehicleType + " on floor " + floorNumber);
-        for (ParkingSpot parkingspot:
-             parkingSpots) {
-            if(parkingspot.getAvailable() && parkingspot.getSpotType().toString().equals(vehicleType.toString())){
-                System.out.print(parkingspot.getSpotId());
-            }
+
+    public ParkingSpot getAvailableSpot(Integer spotId){
+        return spotMap.getOrDefault(spotId, null);
+    }
+
+    public void assignVehicleToSpot(Vehicle vehicle, ParkingSpot spot){
+        spot.assignVehicle(vehicle);
+        markSpotOccupiedFromAvailable(spot);
+    }
+
+    public void removeVehicleFromSpot(ParkingSpot spot){
+        spot.removeVehicle();
+        markSpotAvailableFromOccupied(spot);
+    }
+
+    private void markSpotOccupiedFromAvailable(ParkingSpot parkingSpot){
+        // remove from available
+        availableSpotsMap.get(parkingSpot.getSpotType()).remove(parkingSpot.getSpotId());
+        // add to occupied
+        occupiedSpotsMap.get(parkingSpot.getSpotType()).add(parkingSpot.getSpotId());
+    }
+
+    private void markSpotAvailableFromOccupied(ParkingSpot parkingSpot){
+        // remove from occupied
+        occupiedSpotsMap.get(parkingSpot.getSpotType()).remove(parkingSpot.getSpotId());
+        // add to available
+        availableSpotsMap.get(parkingSpot.getSpotType()).add(parkingSpot.getSpotId());
+    }
+
+    public void displayFloorBoard(DisplayType displayType, VehicleType vehicleType){
+        switch (displayType){
+            case FREE_COUNT:
+                System.out.println("No. of free slots for "+vehicleType+" on Floor "+floorId+": "+availableSpotsMap.get(ApplicationConstants.vehicleTypeToSpotType.get(vehicleType)).size());
+                break;
+            case FREE_SLOTS:
+                System.out.println("Free slots for "+ vehicleType+" on Floor "+floorId+": "+availableSpotsMap.get(ApplicationConstants.vehicleTypeToSpotType.get(vehicleType)));
+                break;
+            case OCCUPIED_SLOTS:
+                System.out.println("Occupied slots for "+ vehicleType+" on Floor "+floorId+": "+occupiedSpotsMap.get(ApplicationConstants.vehicleTypeToSpotType.get(vehicleType)));
+                break;
+            default:
+                System.out.println("Invalid displayType!");
+
         }
     }
 
-    public void displayFreeSlotCount(VehicleType vehicleType){
-        int cnt = 0;
-        for (ParkingSpot parkingspot:
-                parkingSpots) {
-//            System.out.println(parkingspot + " : " + parkingspot.getSpotType().toString().equals(vehicleType.toString()));
-            if( parkingspot.getAvailable() && parkingspot.getSpotType().toString().equals(vehicleType.toString())){
-                cnt++;
-            }
-        }
-        System.out.println("No. of free slots for " + vehicleType +" on Floor " + floorNumber + " : " + cnt);
-    }
-
-    public void displayOccupiedSlots(VehicleType vehicleType){
-        System.out.println("Occupied slots for " + vehicleType + " on floor " + floorNumber);
-        for (ParkingSpot parkingspot:
-                parkingSpots) {
-            if(!parkingspot.getAvailable() && parkingspot.getSpotType().equals(vehicleType)){
-                System.out.print(parkingspot.getSpotId());
-            }
-        }
-    }
-}
-
-class ParkingSpotFactory{
-    public static ParkingSpot createSpot(int slotId){
-        if(ApplicationConstants.spotsForTruck.contains(slotId)){
-            return new ParkingSpot(slotId, SpotType.TRUCK, Boolean.TRUE);
-        }
-        else if(ApplicationConstants.spotsForBike.contains(slotId)){
-            return new ParkingSpot(slotId, SpotType.BIKE, Boolean.TRUE);
-        }else{
-            return new ParkingSpot(slotId, SpotType.CAR, Boolean.TRUE);
-        }
-    }
 }
