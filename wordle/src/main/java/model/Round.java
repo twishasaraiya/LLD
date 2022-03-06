@@ -1,9 +1,8 @@
 package model;
 
 public class Round {
-    Integer id;
+    Player player;
     String wordOfTheDay;
-    Integer currScore;
     RoundStatus roundStatus;
 }
 

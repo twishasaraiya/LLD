@@ -15,4 +15,5 @@ public class Wordle {
     public String getWordOfTheDay() {
         return wordOfTheDay;
     }
+
 }
