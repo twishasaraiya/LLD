@@ -4,7 +4,8 @@
 - Generate random number between 1-6 for each roll.
 - Each player rolls the dice for his/her turn.
 - If player reaches boardSize then he/she wins the game. Board cells are numbered from 1-boardSize. 0 represent start position.
-- If dice value exceeds the player's position beyond boardsize, then skip the move.
+- If dice value exceeds the player's position beyond board size, then skip the move.
+- There could be another snake/ladder at the tail of the snake or the end position of the ladder and the piece should go up/down accordingly.
 
 ### Optional Requirements
 - [X] In case of more than 2 players, the game continues until only one player is left. 

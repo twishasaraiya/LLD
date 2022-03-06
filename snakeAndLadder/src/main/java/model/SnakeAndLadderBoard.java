@@ -74,14 +74,18 @@ public class SnakeAndLadderBoard {
                     // If final position > boardSize then do not move
                     if(finalPosition > boardSize) continue;
 
-                    // If final position has snake head then move to the tail and update the final position
-                    if(snakes.containsKey(finalPosition)) {
-                        finalPosition = snakes.get(finalPosition);
-                    }
 
-                    // If final position has ladder start position then move to the end position and update the final position
-                    if(ladders.containsKey(finalPosition)) {
-                        finalPosition = ladders.get(finalPosition);
+                    // Iterate until there is no other snake/ladder at the tail of the snake
+                    // or the end position of the ladder
+                    while(snakes.containsKey(finalPosition) || ladders.containsKey(finalPosition)) {
+                        // If final position has snake head then move to the tail and update the final position
+                        if(snakes.containsKey(finalPosition)) {
+                            finalPosition = snakes.get(finalPosition);
+                        }
+                        // If final position has ladder start position then move to the end position and update the final position
+                        if(ladders.containsKey(finalPosition)) {
+                            finalPosition = ladders.get(finalPosition);
+                        }
                     }
 
                     // set player's current position
