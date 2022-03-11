@@ -7,8 +7,10 @@ import model.Player;
 import model.Position;
 
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.Queue;
 
 public class GameService {
 
@@ -34,10 +36,11 @@ public class GameService {
     }
 
     public void startGame(){
-        mapAllPlayerToStartPosition(this.game.getPlayers());
+        Queue<Player> playerQueue = mapAllPlayerToStartPosition(this.game.getPlayers());
         Player currPlayer = null;
         do{
-            currPlayer = getPlayer(0);
+            currPlayer = getPlayer(playerQueue);
+            if(currPlayer == null) return;
             Integer diceOutput = throwDice();
             Integer newPosition = calculateNewPositionForPlayer(currPlayer, diceOutput);
             System.out.println(currPlayer.getName() + " rolled a " + diceOutput + " and moved from " + this.playerToPositionMap.get(currPlayer).getPositionId() + " to " + newPosition);
@@ -57,41 +60,56 @@ public class GameService {
             return this.playerToPositionMap.get(player).getPositionId();
         }
 
-        // check if there is a snake head at this new position
-        for (GameComponent snake:
-             this.game.getSnakes()) {
-            if(snake.getHead() == estimatedPosition){
-                estimatedPosition = snake.getTail();
-                break;
-            }
-        }
-
-        // check if there is ladder at estimated position
-        for (GameComponent ladder:
-                game.getLadders()) {
-            if(ladder.getTail() == estimatedPosition){
-                estimatedPosition = ladder.getHead();
-            }
+        // check if there is a game component at this new position
+        GameComponent gameComponentAtPosition = getGameComponentAtPostion(estimatedPosition);
+        while (gameComponentAtPosition != null){
+            estimatedPosition = gameComponentAtPosition.getTail();
+            gameComponentAtPosition = getGameComponentAtPostion(estimatedPosition);
         }
 
         return estimatedPosition;
     }
 
-    private Player getPlayer(Integer idx){
-        if(idx == null || idx >= this.game.getPlayers().size()){
-            idx = 0;
+    private GameComponent getGameComponentAtPostion(Integer position){
+
+        // MAP can be used here for faster retrieval
+        GameComponent component = this.game.getSnakes()
+                .stream()
+                .filter(gameComponent -> gameComponent.getHead() == position)
+                .findFirst()
+                .orElse(null);
+
+        if (component == null){
+            component = this.game.getLadders()
+                    .stream()
+                    .filter(gameComponent -> gameComponent.getHead() == position)
+                    .findFirst()
+                    .orElse(null);
         }
-        return this.game.getPlayers().get(idx);
+
+        return component;
+    }
+
+    private Player getPlayer(Queue<Player> playerQueue){
+        if(playerQueue.isEmpty()){
+            return null;
+        }
+        Player currPlayer = playerQueue.poll();
+        playerQueue.add(currPlayer);
+        return currPlayer;
     }
     public Integer throwDice(){
         return (int) (Math.random() * DICE_SIZE + 1);
     }
 
-    private void mapAllPlayerToStartPosition(List<Player> players){
+    private Queue<Player> mapAllPlayerToStartPosition(List<Player> players){
+        Queue<Player> playerQueue = new LinkedList<>();
         for (Player player:
              players) {
             this.playerToPositionMap.put(player, new Position());
+            playerQueue.add(player);
         }
+        return playerQueue;
     }
 
     private Boolean checkIfPlayerWonGame(Player player){
