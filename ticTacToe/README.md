@@ -4,8 +4,10 @@
 https://workat.tech/machine-coding/practice/design-tic-tac-toe-smyfi9x064ry 
 
 ### Requirements
-- Row is numbered from 1-3 and column is numbered from 1-3 (1-based indexing)
-- Check the valid after each turn
+- Row is numbered from 1-3 and column is numbered from 1-3 (1-based indexing).
+- Check the validity of move after each turn.
+- For invalid move, same player plays again.
+- Print board after every valid move.
 
 ### Optional Requirements
 - [X] Grid size customisable 
@@ -16,5 +18,6 @@ https://workat.tech/machine-coding/practice/design-tic-tac-toe-smyfi9x064ry
 
 ### Entities
 - Cell --> row, col, piece
-- Board --> gridSize, grid, count, initializeBoard(), printBoard(), isValidMove(), hasWonGame(), playGame()
+- Board --> gridSize, grid = Cell[][], initializeBoard(), printBoard()
 - Player --> playerName, piece
+- GameService --> gridSize, Board, count, Queue<Player> players, addPlayer(), isValidMove(), hasWonGame(), playGame(), hasNextTurn()
