@@ -61,7 +61,7 @@ public class Game {
             return;
         }
 
-        if(!grid.isEmptyAtPosition(xPosition, yPosition)){
+        if(!grid.getPieceTypeByPosition(xPosition, yPosition).equals(PieceType.EMPTY)){
             System.out.println("Invalid Move");
             return;
         }

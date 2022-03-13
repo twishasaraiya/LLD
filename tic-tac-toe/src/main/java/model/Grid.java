@@ -36,12 +36,15 @@ public class Grid {
         cell.pieceType = pieceType;
     }
 
-    public Boolean isEmptyAtPosition(Integer x, Integer y){
-        if(grid.get(x-1).get(y-1).pieceType.equals(PieceType.EMPTY)){
-            return Boolean.TRUE;
-        }
-        return Boolean.FALSE;
+    public PieceType getPieceTypeByPosition(Integer x, Integer y){
+        return grid.get(x-1).get(y-1).pieceType;
     }
+//    public Boolean isEmptyAtPosition(Integer x, Integer y){
+//        if(grid.get(x-1).get(y-1).pieceType.equals(PieceType.EMPTY)){
+//            return Boolean.TRUE;
+//        }
+//        return Boolean.FALSE;
+//    }
 
     public Boolean isFull(){        // TODO: Do we really need this? Can it be done in O(1)
         for (List<Cell> row:
