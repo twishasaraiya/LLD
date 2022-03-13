@@ -1,8 +1,9 @@
 package model;
 
 public class Board {
-    private int boardSize;
-    private Tile[][] board;
+    private static final int[][] dirs = {{0,-1}, {0, 1}, {-1, 0}, {1,0}};
+    private final int boardSize;
+    private final Tile[][] board;
     private int maxValue;
 
     public Board(int boardSize){
@@ -42,26 +43,31 @@ public class Board {
         return board[x][y].value;
     }
 
-    public boolean boardContains(int number){
+
+    public boolean isBoardFull(){
         for(int i=0; i<boardSize; i++){
             for(int j=0; j<boardSize; j++){
-                if(board[i][j].value == number){
-                    return true;
+                if(board[i][j].value == 0 || sameValueNeighbourExist(i, j)){
+                    return false;
                 }
+            }
+        }
+        return true;
+    }
+
+    private boolean inBoard(int x, int y){
+        return ((x >=0 && x < boardSize) && (y >=0 && y < boardSize));
+    }
+
+    private boolean sameValueNeighbourExist(int x, int y){
+        int xx, yy;
+        for(int[] dir: dirs){
+            xx = x + dir[0];
+            yy = y + dir[0];
+            if(inBoard(xx, yy) && board[xx][yy].value == board[x][y].value){
+                return true;
             }
         }
         return false;
-    }
-
-    public boolean isBoardFull(){
-        int filled = 0;
-        for(int i=0; i<boardSize; i++){
-            for(int j=0; j<boardSize; j++){
-                if(board[i][j].value != 0){
-                    filled++;
-                }
-            }
-        }
-        return filled == boardSize*boardSize;
     }
 }

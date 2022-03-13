@@ -2,9 +2,7 @@ package model;
 
 import enums.MoveDirection;
 
-import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStreamReader;
 import java.util.Random;
 
 public class Game {
@@ -22,24 +20,14 @@ public class Game {
         random = new Random();
     }
 
+    public Boolean isGameOver() {
+        return gameOver;
+    }
+
     public void startGame() throws IOException {
-        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        System.out.println("Game started");
         fillRandomTile(); fillRandomTile();
         displayBoard();
-        while (!gameOver){
-            System.out.print("Enter Move:: ");
-            int direction = Integer.parseInt(br.readLine());
-            executeMove(direction);
-            fillRandomTile(); displayBoard();
-            if(hasGameWon()){
-                System.out.println("Congratulations");
-                gameOver = Boolean.TRUE;
-            }
-            else if(hasGameLost()){
-                System.out.println("Game over");
-                gameOver = Boolean.TRUE;
-            }
-        }
     }
 
     public void executeMove(int direction){
@@ -61,6 +49,17 @@ public class Game {
             case BOTTOM:
                 moveAllTilesBottom();
                 break;
+        }
+        fillRandomTile();
+        displayBoard();
+        if(hasGameWon()){
+            System.out.println("Congratulations");
+            gameOver = Boolean.TRUE;
+            return;
+        }
+        if(hasGameLost()){
+            System.out.println("Game over");
+            gameOver = Boolean.TRUE;
         }
     }
 
@@ -204,4 +203,5 @@ public class Game {
     private void displayBoard(){
         board.displayBoard();
     }
+
 }
