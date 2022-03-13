@@ -57,6 +57,10 @@ public class GameService {
             //////////////////////  O(1) complexity   ////////////////////////
             ///////////////////// Applicable for only 2 players ///////////////
 
+           1    X X X  row[0] = 3, row[1] = 1, col[0] = 0
+           2    0 0 0  row[1] = -3
+           3    - - -
+
 
             int val = currentPlayerIdx == 1 ? 1 : -1;
             rowArr[row] += val;
@@ -127,7 +131,7 @@ public class GameService {
         if(players.size() > 1) {
             Player player = players.peek();
             GameStatus status = playGame(row, col, player);
-            if(status.equals(GameStatus.valueOf("VALID"))) {
+            if(status == GameStatus.VALID) {
                 player = players.poll();
                 players.offer(player);
                 return true;
@@ -136,13 +140,13 @@ public class GameService {
                 * currentPlayerIdx = currentPlayerIdx == 1 ? 0 : 1;
                 * */
             }
-            else if(status.equals(GameStatus.valueOf("WON"))) {
+            else if(status == GameStatus.WON) {
                 players.poll();
                 return players.size() > 1;
-            } else if (status.equals(GameStatus.valueOf("DRAW"))) {
+            } else if (status == GameStatus.DRAW) {
                 players.clear();
                 return false;
-            } else if (status.equals(GameStatus.valueOf("INVALID"))) return true;
+            } else if (status == GameStatus.INVALID) return true;
         }
 
         System.out.println("There should be at least 2 players playing the Tic Tac Toe Game");
