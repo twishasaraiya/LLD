@@ -21,7 +21,7 @@ public class Grid {
     public void printGrid(){
         for (int i = 0; i < grid.size(); i++) {
             for (int j = 0; j < grid.get(i).size(); j++) {
-                System.out.print(grid.get(i).get(j).pieceType.getAlias() + " ");
+                System.out.print(grid.get(i).get(j).getPieceType().getAlias() + " ");
             }
             System.out.println();
         }
@@ -29,10 +29,10 @@ public class Grid {
 
     public void updateCellTypeAtPosition(Integer x, Integer y, PieceType pieceType) {
         Cell cell = this.grid.get(x-1).get(y-1);
-        cell.pieceType = pieceType;
+        cell.setPieceType(pieceType);
     }
 
     public PieceType getPieceTypeByPosition(Integer x, Integer y){
-        return grid.get(x-1).get(y-1).pieceType;
+        return grid.get(x-1).get(y-1).getPieceType();
     }
 }
