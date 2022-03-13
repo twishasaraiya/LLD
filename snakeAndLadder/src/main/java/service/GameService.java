@@ -15,12 +15,10 @@ import java.util.Queue;
 public class GameService {
 
     private final Game game;
-    private Map<Player, Position> playerToPositionMap;
     private static final Integer DICE_SIZE = 6;
 
     private GameService(Game game) {
         this.game = game;
-        playerToPositionMap = new HashMap<>();
     }
 
     public static GameService newGame(){
@@ -43,7 +41,7 @@ public class GameService {
             if(currPlayer == null) return;
             Integer diceOutput = throwDice();
             Integer newPosition = calculateNewPositionForPlayer(currPlayer, diceOutput);
-            System.out.println(currPlayer.getName() + " rolled a " + diceOutput + " and moved from " + this.playerToPositionMap.get(currPlayer).getPositionId() + " to " + newPosition);
+            System.out.println(currPlayer.getName() + " rolled a " + diceOutput + " and moved from " + this.game.getPlayerPosition(currPlayer).getPositionId() + " to " + newPosition);
             updatePlayerPostion(currPlayer, newPosition);
         }while(!checkIfPlayerWonGame(currPlayer));
 
@@ -51,13 +49,13 @@ public class GameService {
     }
 
     private void updatePlayerPostion(Player player, Integer newPosition){
-        this.playerToPositionMap.get(player).setPositionId(newPosition);
+        this.game.getPlayerPosition(player).setPositionId(newPosition);
     }
 
     private Integer calculateNewPositionForPlayer(Player player, Integer diceOutput){
-        Integer estimatedPosition = this.playerToPositionMap.get(player).getPositionId() + diceOutput;
+        Integer estimatedPosition = this.game.getPlayerPosition(player).getPositionId() + diceOutput;
         if(estimatedPosition > 100){
-            return this.playerToPositionMap.get(player).getPositionId();
+            return this.game.getPlayerPosition(player).getPositionId();
         }
 
         // check if there is a game component at this new position
@@ -106,13 +104,13 @@ public class GameService {
         Queue<Player> playerQueue = new LinkedList<>();
         for (Player player:
              players) {
-            this.playerToPositionMap.put(player, new Position());
+            this.game.addPlayerPosition(player);
             playerQueue.add(player);
         }
         return playerQueue;
     }
 
     private Boolean checkIfPlayerWonGame(Player player){
-        return this.playerToPositionMap.get(player).getPositionId() == 100;
+        return this.game.getPlayerPosition(player).getPositionId() == Game.getBoardSize();
     }
 }

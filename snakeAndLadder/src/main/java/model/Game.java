@@ -3,23 +3,45 @@ package model;
 import service.ComponentFactory;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class Game {
-    List<GameComponent> snakes;
-    List<GameComponent> ladders;
-
-    List<Player> players;
-
+    private List<GameComponent> snakes;
+    private List<GameComponent> ladders;
+    private List<Player> players;
+    private Map<Player, Position> playerToPositionMap;
+    private static final Integer DEFAULT_BOARD_SIZE = 100;
+    private static Integer BOARD_SIZE;
 
     public Game() {
         snakes = new ArrayList<>();
         ladders = new ArrayList<>();
         players = new ArrayList<>();
+        playerToPositionMap = new HashMap<>();
+        this.BOARD_SIZE = DEFAULT_BOARD_SIZE;
+    }
+
+    public Game(Integer boardSize){
+        this();
+        this.BOARD_SIZE = boardSize;
+    }
+
+    public static Integer getBoardSize() {
+        return BOARD_SIZE;
+    }
+
+    public Position getPlayerPosition(Player player){
+        return this.playerToPositionMap.get(player);
+    }
+
+    public void addPlayerPosition(Player player){
+        this.playerToPositionMap.put(player, new Position());
     }
 
     public void addGameComponent(Integer head, Integer tail, ComponentType type){
-        GameComponent component = new GameComponent(head, tail, type);
+        GameComponent component = ComponentFactory.buildComponent(head, tail, type);
         switch (type){
             case LADDER:
                 this.ladders.add(component);
