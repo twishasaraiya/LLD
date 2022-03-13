@@ -9,6 +9,7 @@
         <module name="ticTacToe" />
         <module name="wordle" />
         <module name="parkingLot" />
+        <module name="2048-game" />
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel>
