@@ -7,12 +7,14 @@
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
         <module name="snakeAndLadder" />
+        <module name="ticTacToe" />
         <module name="wordle" />
         <module name="parkingLot" />
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel>
       <module name="abcd" target="11" />
+      <module name="snakeAndLadder" target="7" />
     </bytecodeTargetLevel>
   </component>
 </project>
