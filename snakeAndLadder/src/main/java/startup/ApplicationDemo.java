@@ -1,6 +1,6 @@
 package startup;
 
-import model.SnakeAndLadderBoard;
+import services.SnakeAndLadderGameService;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -12,35 +12,40 @@ public class ApplicationDemo {
                 .in));
 
         // Read board size
+        System.out.println("Enter board size");
         int boardSize = Integer.parseInt(br.readLine());
-        SnakeAndLadderBoard snakeAndLadderBoard = new SnakeAndLadderBoard(boardSize);
+        SnakeAndLadderGameService snakeAndLadderGameService = new SnakeAndLadderGameService(boardSize);
 
         // Read Snakes position
+        System.out.println("Enter number of snakes");
         int numSnakes = Integer.parseInt(br.readLine());
+        System.out.println("Enter " + numSnakes + " head and tail position of snake");
         for(int i=1; i<=numSnakes; i++) {
             String[] cmd = br.readLine().split(" ");
-            snakeAndLadderBoard.addSnakePosition(Integer.parseInt(cmd[0]), Integer.parseInt(cmd[1]));
+            snakeAndLadderGameService.addSnakePosition(Integer.parseInt(cmd[0]), Integer.parseInt(cmd[1]));
         }
 
         // Read Ladders position
+        System.out.println("Enter number of ladders");
         int numLadders = Integer.parseInt(br.readLine());
+        System.out.println("Enter " + numLadders + " start and end position of ladder");
         for(int i=1; i<=numLadders; i++) {
             String[] cmd = br.readLine().split(" ");
-            snakeAndLadderBoard.addLadderPosition(Integer.parseInt(cmd[0]), Integer.parseInt(cmd[1]));
+            snakeAndLadderGameService.addLadderPosition(Integer.parseInt(cmd[0]), Integer.parseInt(cmd[1]));
         }
 
         // Read Players who are playing the game
+        System.out.println("Enter number of players");
         int numPlayers = Integer.parseInt(br.readLine());
+        System.out.println("Enter " + numPlayers + " player name");
         for(int i=1; i<=numPlayers; i++) {
-            String[] cmd = br.readLine().split(" ");
-            snakeAndLadderBoard.addPlayer(cmd[0]);
+            snakeAndLadderGameService.addPlayer(br.readLine());
         }
 
-        // Read the choice whether the game is played with 2 dice or not
-        System.out.println("Do you want to play with 2 dice");
-        System.out.println("Enter  \n1 for No \n2 for Yes");
-        boolean isPlayWith2Dice =  Integer.parseInt(br.readLine()) == 2;
-        snakeAndLadderBoard.setPlayWith2Dice(isPlayWith2Dice);
-        snakeAndLadderBoard.playGame();
+        System.out.println("Enter number of dice");
+        int numDice = Integer.parseInt(br.readLine());
+        snakeAndLadderGameService.setNoOfDices(numDice);
+
+        snakeAndLadderGameService.startGame();
     }
 }

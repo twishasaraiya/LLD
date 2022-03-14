@@ -1,5 +1,11 @@
 ## Snake and Ladder
 
+### Problem Link
+https://workat.tech/machine-coding/practice/snake-and-ladder-problem-zgtac9lxwntg 
+
+### Solution Link
+https://workat.tech/machine-coding/editorial/how-to-design-snake-and-ladder-machine-coding-ehskk9c40x2w 
+
 ### Requirements
 - Generate random number between 1-6 for each roll.
 - Each player rolls the dice for his/her turn.
