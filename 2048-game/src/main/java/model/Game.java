@@ -24,7 +24,7 @@ public class Game {
         return gameOver;
     }
 
-    public void startGame() throws IOException {
+    public void startGame() {
         System.out.println("Game started");
         fillRandomTile(); fillRandomTile();
         displayBoard();
@@ -64,117 +64,143 @@ public class Game {
     }
 
     private void moveAllTilesLeft(){
-        for(int i=0; i<BOARD_SIZE; i++){
-            for(int j=1; j<BOARD_SIZE; j++){
-                if(board.getValueAt(i, j) == 0) continue;
-                int k = j-1;
-                while(k >= 0 && board.getValueAt(i, k) == 0){
-                    k--;
+        for(int i=0; i<BOARD_SIZE; i++) {
+            // move zero's to end of the row
+            int idx = 0;
+            for(int j=0; j<BOARD_SIZE; j++){
+                if(board.getValueAt(i, j) != 0){
+                    board.updateBoard(i, idx, board.getValueAt(i, j));
+                    idx++;
                 }
-                // all 0 left of tile
-                if(k < 0){
-                    board.updateBoard(i, k+1, board.getValueAt(i, j));
-                    board.updateBoard(i, j, 0);
+            }
+            while(idx < BOARD_SIZE){
+                board.updateBoard(i, idx, 0);
+                idx++;
+            }
+            // then merge neighbour tiles if possible
+            for(int j=0; j<BOARD_SIZE-1; j++){
+                if(board.getValueAt(i, j) == board.getValueAt(i, j+1)){
+                    board.updateBoard(i, j, board.getValueAt(i, j) + board.getValueAt(i, j+1));
+                    board.updateBoard(i, j+1, 0);
                 }
-                else{
-                    int currTileValue = board.getValueAt(i, j);
-                    int prevTileValue = board.getValueAt(i, k);
-                    // left non-zero tile have same value as current tile
-                    if(currTileValue == prevTileValue){
-                        board.updateBoard(i, k, currTileValue+prevTileValue);
-                        board.updateBoard(i, j, 0);
-                    }
-                    // left non-zero tile have different value as current tile
-                    else{
-                        // current tile can't move left
-                        board.updateBoard(i, k+1, currTileValue);
-                        if(k != j-1) board.updateBoard(i, j, 0);
-                    }
+            }
+            // again move zero's to end of the row
+            idx = 0;
+            for(int j=0; j<BOARD_SIZE; j++){
+                if(board.getValueAt(i, j) != 0){
+                    board.updateBoard(i, idx, board.getValueAt(i, j));
+                    idx++;
                 }
-
+            }
+            while(idx < BOARD_SIZE){
+                board.updateBoard(i, idx, 0);
+                idx++;
             }
         }
     }
 
     private void moveAllTilesRight(){
         for(int i=0; i<BOARD_SIZE; i++){
-            for(int j=BOARD_SIZE-2; j>=0; j--){
-                if(board.getValueAt(i, j) == 0) continue;
-                int k = j+1;
-                while(k < BOARD_SIZE && board.getValueAt(i, k) == 0){
-                    k++;
+            // move zero's to start of the row
+            int idx = BOARD_SIZE-1;
+            for(int j=BOARD_SIZE-1; j>=0; j--){
+                if(board.getValueAt(i, j) != 0){
+                    board.updateBoard(i, idx, board.getValueAt(i, j));
+                    idx--;
                 }
-                // all 0 right of current tile
-                if(k == BOARD_SIZE){
-                    board.updateBoard(i, k-1, board.getValueAt(i, j));
-                    board.updateBoard(i, j, 0);
+            }
+            while(idx >= 0){
+                board.updateBoard(i, idx, 0);
+                idx--;
+            }
+            // then merge neighbour tiles if possible
+            for(int j=BOARD_SIZE-1; j>0; j--){
+                if(board.getValueAt(i, j) == board.getValueAt(i, j-1)){
+                    board.updateBoard(i, j, board.getValueAt(i, j) + board.getValueAt(i, j-1));
+                    board.updateBoard(i, j-1, 0);
                 }
-                else{
-                    int currTileValue = board.getValueAt(i, j);
-                    int nextTileValue = board.getValueAt(i, k);
-                    if(currTileValue == nextTileValue){
-                        board.updateBoard(i, k, currTileValue+nextTileValue);
-                        board.updateBoard(i, j, 0);
-                    }
-                    else{
-                        board.updateBoard(i, k-1, currTileValue);
-                        if(k != j+1) board.updateBoard(i, j, 0);
-                    }
+            }
+            // again move zero's to start of the row
+            idx = BOARD_SIZE-1;
+            for(int j=BOARD_SIZE-1; j>=0; j--){
+                if(board.getValueAt(i, j) != 0){
+                    board.updateBoard(i, idx, board.getValueAt(i, j));
+                    idx--;
                 }
+            }
+            while(idx >= 0){
+                board.updateBoard(i, idx, 0);
+                idx--;
             }
         }
     }
     private void moveAllTilesTop(){
         for(int j=0; j<BOARD_SIZE; j++){
-            for(int i=1; i<BOARD_SIZE; i++){
-                if(board.getValueAt(i, j) == 0) continue;
-                int k = i-1;
-                while(k >= 0 && board.getValueAt(k, j) == 0){
-                    k--;
+            // move zero's to top of the column
+            int idx = 0;
+            for(int i=0; i<BOARD_SIZE; i++){
+                if(board.getValueAt(i, j) != 0){
+                    board.updateBoard(idx, j, board.getValueAt(i, j));
+                    idx++;
                 }
-                if(k < 0){
-                    board.updateBoard(k+1, j, board.getValueAt(i, j));
-                    board.updateBoard(i, j, 0);
+            }
+            while(idx < BOARD_SIZE){
+                board.updateBoard(idx, j, 0);
+                idx++;
+            }
+            // then merge neighbour tiles if possible
+            for(int i=0; i<BOARD_SIZE-1; i++){
+                if(board.getValueAt(i, j) == board.getValueAt(i+1, j)){
+                    board.updateBoard(i, j, board.getValueAt(i, j) + board.getValueAt(i+1, j));
+                    board.updateBoard(i+1, j, 0);
                 }
-                else{
-                    int currTileValue = board.getValueAt(i, j);
-                    int upTileValue = board.getValueAt(k, j);
-                    if(currTileValue == upTileValue){
-                        board.updateBoard(k, j, currTileValue+upTileValue);
-                        board.updateBoard(i, j, 0);
-                    }
-                    else{
-                        board.updateBoard(k+1, j, currTileValue);
-                        if(k != i-1) board.updateBoard(i, j, 0);
-                    }
+            }
+            // again move zero's to top of the row
+            idx = 0;
+            for(int i=0; i<BOARD_SIZE; i++){
+                if(board.getValueAt(i, j) != 0){
+                    board.updateBoard(idx, j, board.getValueAt(i, j));
+                    idx++;
                 }
+            }
+            while(idx < BOARD_SIZE){
+                board.updateBoard(idx, j, 0);
+                idx++;
             }
         }
     }
     private void moveAllTilesBottom(){
         for(int j=0; j<BOARD_SIZE; j++){
-            for(int i=BOARD_SIZE-2; i>=0; i--){
-                if(board.getValueAt(i, j) == 0) continue;
-                int k = i+1;
-                while(k < BOARD_SIZE && board.getValueAt(k, j) == 0){
-                    k++;
+            // move zero's to bottom of the column
+            int idx = BOARD_SIZE-1;
+            for(int i=BOARD_SIZE-1; i>=0; i--){
+                if(board.getValueAt(i, j) != 0){
+                    board.updateBoard(idx, j, board.getValueAt(i, j));
+                    idx--;
                 }
-                if(k == BOARD_SIZE){
-                    board.updateBoard(k-1, j, board.getValueAt(i, j));
-                    board.updateBoard(i, j, 0);
+            }
+            while(idx >= 0){
+                board.updateBoard(idx, j, 0);
+                idx--;
+            }
+            // then merge neighbour tiles if possible
+            for(int i=BOARD_SIZE-1; i>0; i--){
+                if(board.getValueAt(i, j) == board.getValueAt(i-1, j)){
+                    board.updateBoard(i, j, board.getValueAt(i, j) + board.getValueAt(i-1, j));
+                    board.updateBoard(i-1, j, 0);
                 }
-                else{
-                    int currTileValue = board.getValueAt(i, j);
-                    int downTileValue = board.getValueAt(k, j);
-                    if(currTileValue == downTileValue){
-                        board.updateBoard(k, j, currTileValue+downTileValue);
-                        board.updateBoard(i, j, 0);
-                    }
-                    else{
-                        board.updateBoard(k-1, j, currTileValue);
-                        if(k != i+1) board.updateBoard(i, j, 0);
-                    }
+            }
+            // again move zero's to bottom of the column
+            idx = BOARD_SIZE-1;
+            for(int i=BOARD_SIZE-1; i>=0; i--){
+                if(board.getValueAt(i, j) != 0){
+                    board.updateBoard(idx, j, board.getValueAt(i, j));
+                    idx--;
                 }
+            }
+            while(idx >= 0){
+                board.updateBoard(idx, j, 0);
+                idx--;
             }
         }
     }
