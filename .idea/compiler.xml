@@ -10,6 +10,7 @@
         <module name="wordle" />
         <module name="parkingLot" />
         <module name="2048-game" />
+        <module name="splitwise" />
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel>
