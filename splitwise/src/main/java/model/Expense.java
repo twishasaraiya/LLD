@@ -1,49 +1,32 @@
 package model;
 
-import strategy.IDistributionStrategy;
+import enums.SplitType;
 
 import java.util.List;
 import java.util.UUID;
 
 public class Expense {
     private String expenseId;
-    private String expenseName;
-    private String description;
-    private User paidBy;
+    private ExpenseMetaData expenseMetaData;
+    private String paidBy;
     private Double expenseAmount;
-    private List<User> participants;
-    private IDistributionStrategy distributionStrategy;
+    private List<String> participants;
+    private SplitType splitType;
 
     public Expense() {
         this.expenseId = UUID.randomUUID().toString();
+        this.expenseMetaData = new ExpenseMetaData();
     }
 
     public String getExpenseId() {
         return expenseId;
     }
 
-
-    public String getExpenseName() {
-        return expenseName;
-    }
-
-    public void setExpenseName(String expenseName) {
-        this.expenseName = expenseName;
-    }
-
-    public String getDescription() {
-        return description;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
-    }
-
-    public User getPaidBy() {
+    public String getPaidBy() {
         return paidBy;
     }
 
-    public void setPaidBy(User paidBy) {
+    public void setPaidBy(String paidBy) {
         this.paidBy = paidBy;
     }
 
@@ -55,19 +38,23 @@ public class Expense {
         this.expenseAmount = expenseAmount;
     }
 
-    public List<User> getParticipants() {
+    public List<String> getParticipants() {
         return participants;
     }
 
-    public void setParticipants(List<User> participants) {
+    public void setParticipants(List<String> participants) {
         this.participants = participants;
     }
 
-    public IDistributionStrategy getDistributionStrategy() {
-        return distributionStrategy;
+    public ExpenseMetaData getExpenseMetaData() {
+        return expenseMetaData;
     }
 
-    public void setDistributionStrategy(IDistributionStrategy distributionStrategy) {
-        this.distributionStrategy = distributionStrategy;
+    public SplitType getSplitType() {
+        return splitType;
+    }
+
+    public void setSplitType(SplitType splitType) {
+        this.splitType = splitType;
     }
 }

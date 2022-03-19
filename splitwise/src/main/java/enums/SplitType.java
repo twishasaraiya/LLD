@@ -1,6 +1,6 @@
 package enums;
 
-public enum DistributionType {
+public enum SplitType {
     EQUAL,
     EXACT,
     PERCENT;
