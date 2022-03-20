@@ -1,27 +1,25 @@
 package model;
 
-import java.util.AbstractMap;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 public class Value {
-    private List<Map.Entry<String, Object>> entries;
+    private Map<String, Object> entries;
 
-    public List<Map.Entry<String, Object>> getEntries() {
+    public Map<String, Object> getEntries() {
         return entries;
     }
 
     public Value() {
-        entries = new ArrayList<>();
+        entries = new ConcurrentHashMap<>();
     }
 
-    public Value(List<Map.Entry<String, Object>> entries) {
+    public Value(Map<String, Object> entries) {
         this.entries = entries;
     }
 
     public void addEntry(String key, Object value){
-        entries.add(new AbstractMap.SimpleEntry<>(key, value));
+        entries.put(key, value);
     }
 
     @Override
@@ -29,7 +27,7 @@ public class Value {
         // TODO: Paste diff between using string buffer and string builder. String buffer is thread safe
         StringBuffer stringBuffer = new StringBuffer();
         for (Map.Entry<String, Object> attributeSet:
-                entries) {
+                entries.entrySet()) {
             stringBuffer.append(attributeSet.getKey() + " : " + attributeSet.getValue() + ",");
         }
         return stringBuffer.toString();

@@ -5,6 +5,7 @@ import model.CommandType;
 import model.Value;
 import service.DataService;
 import service.DataServiceImpl;
+import service.ThreadSafeDataServiceImpl;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
@@ -17,6 +18,10 @@ import java.util.stream.Collectors;
 
 public class ApplicationDemo {
     public static void main(String[] args) throws Exception {
+
+//        Uncomment to test
+//        testPutMethod();
+
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 
         DataService dataService = new DataServiceImpl();
@@ -64,6 +69,44 @@ public class ApplicationDemo {
             }
             input = br.readLine();
         }
+    }
+
+    /**
+     * Test Case 1: 10 threads inserts data into the map
+     * When we read the value it should return the value set by last thread;
+     */
+    public static void testPutMethod() throws InterruptedException {
+        DataService defaultStore = new DataServiceImpl();
+        DataService concurrentStore = new ThreadSafeDataServiceImpl();
+        int numThreads = 5;
+        for (int i = 0; i < numThreads; i++) {
+            int finalI = i;
+            Thread t1 = new Thread(() -> {
+                List<Map.Entry<String, String>> value = List.of(new AbstractMap.SimpleEntry("attri", String.valueOf(finalI)));
+                try {
+                    // each thread inserts 100 keys
+                    for (int j = 0; j < 10; j++) {
+                        String key = "key"+ finalI + j;
+                        defaultStore.put(key, value);
+                        if(defaultStore.get(key) == null){
+                            System.out.println(key + " not found in default store");
+                        }
+                        concurrentStore.put(key, value);
+                        if(concurrentStore.get(key) == null){
+                            System.out.println(key + " not inserted in concurrent store");
+                        }
+                    }
+                } catch (Exception exception) {
+                    System.out.println("Exception in put method for value " + finalI);
+                    exception.printStackTrace();
+                }
+            });
+            t1.start();
+        }
+
+        Thread.sleep(1000);
+        System.out.println("Final size of default hash map ( 5 threads * 10 keys ) =" + defaultStore.keys().size());
+        System.out.println("Final size of concurrent map ( 5 threads * 10 keys ) =" + concurrentStore.keys().size());
     }
 
     public static List<Map.Entry<String, String>> buildAttributeList(String[] inputs){

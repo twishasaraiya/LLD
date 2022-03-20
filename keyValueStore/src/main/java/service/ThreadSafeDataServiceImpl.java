@@ -4,6 +4,7 @@ import exception.DataTypeException;
 import model.Value;
 import util.Helper;
 
+import java.util.AbstractMap;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -14,7 +15,7 @@ import java.util.concurrent.ConcurrentHashMap;
 public class ThreadSafeDataServiceImpl implements DataService{
 
     private Map<String, Value> concurrentStore;
-    private Map<String, Class> uniqueAttributeNameToClassMap;
+    private Map<String, Map.Entry<String, Class>> uniqueAttributeNameToClassMap;
 
     public ThreadSafeDataServiceImpl() {
         this.concurrentStore = new ConcurrentHashMap<>();
@@ -36,7 +37,7 @@ public class ThreadSafeDataServiceImpl implements DataService{
         for (String key: concurrentStore.keySet()) {
             Value attributes = concurrentStore.get(key);
             for (Map.Entry<String, Object> attribute:
-                 attributes.getEntries()) {
+                 attributes.getEntries().entrySet()) {
                 if(attribute.getKey().equals(attributeKey) && attribute.getValue().equals(Helper.parseString(attributeValue))){
                     keys.add(key);
                     break;
@@ -54,13 +55,14 @@ public class ThreadSafeDataServiceImpl implements DataService{
             String attributeKey = entry.getKey();
             Object attributeValue = (entry.getValue());
 
-            System.out.println("attribute : " + attributeKey + " : " + attributeValue + " ( " + attributeValue.getClass() + ")");
-            Class existingAttributeKey = uniqueAttributeNameToClassMap.getOrDefault(attributeKey, null);
-            if (existingAttributeKey != null && !existingAttributeKey.equals(attributeValue.getClass())) {
+//            System.out.println("attribute : " + attributeKey + " : " + attributeValue + " ( " + attributeValue.getClass() + ")");
+            Map.Entry<String, Class> existingAttribute = uniqueAttributeNameToClassMap.getOrDefault(attributeKey, null);
+            if (existingAttribute != null && !existingAttribute.getValue().equals(attributeValue.getClass())) {
                 throw new DataTypeException("Data Type Error");
             } else {
                 // put the new unique attribute
-                uniqueAttributeNameToClassMap.put(attributeKey, attributeValue.getClass());
+                uniqueAttributeNameToClassMap.put(attributeKey, new
+                        AbstractMap.SimpleEntry<>(key, attributeValue.getClass()));
                 value.addEntry(attributeKey, attributeValue);
             }
         }
@@ -70,9 +72,17 @@ public class ThreadSafeDataServiceImpl implements DataService{
     @Override
     public void deleteKey(String key) {
         if (concurrentStore.get(key) != null) {
-            // TODO: Should we delete attributes from the other map too?
+            // Should we delete attributes from the other map too?
             // If yes, how do we know which unique attributes to delete?
             // Bcz we dont want to delete attributes that were added via another key
+            Value attributes = concurrentStore.get(key);
+            for (Map.Entry<String, Object> attribute:
+                 attributes.getEntries().entrySet()){
+                if(uniqueAttributeNameToClassMap.containsKey(attribute.getKey()) && uniqueAttributeNameToClassMap.get(attribute.getKey()).getKey().equals(key)){
+                    uniqueAttributeNameToClassMap.remove(attribute.getKey());
+                }
+            }
+
             concurrentStore.remove(key);
         }
     }
