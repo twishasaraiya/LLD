@@ -57,36 +57,38 @@ public class ExpenseManagerImpl implements ExpenseManager {
     }
 
     @Override
-    public void showAllUserBalances() {
+    public List<String[]> getAllUserBalances(){
+        List<String[]> allUserBalances = new ArrayList<>();
         if(balanceMap.size() == 0){
-            System.out.println("No balances");
-            return;
+            return allUserBalances;
         }
         for(String userId: balanceMap.keySet()){
             Map<String, Double> userBalance = balanceMap.get(userId);
             for(Map.Entry<String, Double> entry: userBalance.entrySet()){
                 if(entry.getValue() < 0){
-                    System.out.println(userId + " owes " + entry.getKey() + ": " + -entry.getValue());
+                    allUserBalances.add(new String[]{userId, entry.getKey(), String.valueOf(-entry.getValue())});
                 }
             }
         }
+        return allUserBalances;
     }
 
     @Override
-    public void showUserBalances(String userId) {
+    public List<String[]> getUserBalances(String userId){
+        List<String[]> userBalances = new ArrayList<>();
         if(!balanceMap.containsKey(userId)){
-            System.out.println("No balances");
-            return;
+            return userBalances;
         }
         Map<String, Double> userBalance = balanceMap.get(userId);
         for(Map.Entry<String, Double> entry: userBalance.entrySet()){
             if(entry.getValue() > 0){
-                System.out.println(entry.getKey() + " owes " + userId + ": " + entry.getValue());
+                userBalances.add(new String[]{entry.getKey(), userId, String.valueOf(entry.getValue())});
             }
             else{
-                System.out.println(userId + " owes " + entry.getKey() + ": " + -entry.getValue());
+                userBalances.add(new String[]{userId, entry.getKey(), String.valueOf(-entry.getValue())});
             }
         }
+        return userBalances;
     }
 
 }

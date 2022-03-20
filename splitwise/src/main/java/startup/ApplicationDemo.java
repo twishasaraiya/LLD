@@ -13,14 +13,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.StringTokenizer;
 
-/*
-1. There should be a SplitwiseSevice which composed of UserManagement and ExpenseManagerService
-2. From application demo input should be passed to SplitWiseService
-3. Expense class should have Distribution type not, Distribution strategy
-4. Expense Manager will have a Distribution strategy
-5. In ExpenseManger key of map should be user_id instead of user object.
-*/
-
 public class ApplicationDemo {
     public static void main(String[] args) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
