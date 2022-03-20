@@ -1,5 +1,6 @@
 package service.impl;
 
+import dto.Balance;
 import enums.SplitType;
 import model.Expense;
 import service.ExpenseManager;
@@ -57,8 +58,8 @@ public class ExpenseManagerImpl implements ExpenseManager {
     }
 
     @Override
-    public List<String[]> getAllUserBalances(){
-        List<String[]> allUserBalances = new ArrayList<>();
+    public List<Balance> getAllUserBalances(){
+        List<Balance> allUserBalances = new ArrayList<>();
         if(balanceMap.size() == 0){
             return allUserBalances;
         }
@@ -66,7 +67,7 @@ public class ExpenseManagerImpl implements ExpenseManager {
             Map<String, Double> userBalance = balanceMap.get(userId);
             for(Map.Entry<String, Double> entry: userBalance.entrySet()){
                 if(entry.getValue() < 0){
-                    allUserBalances.add(new String[]{userId, entry.getKey(), String.valueOf(-entry.getValue())});
+                    allUserBalances.add(new Balance (userId, entry.getKey(), -entry.getValue()));
                 }
             }
         }
@@ -74,18 +75,18 @@ public class ExpenseManagerImpl implements ExpenseManager {
     }
 
     @Override
-    public List<String[]> getUserBalances(String userId){
-        List<String[]> userBalances = new ArrayList<>();
+    public List<Balance> getUserBalances(String userId){
+        List<Balance> userBalances = new ArrayList<>();
         if(!balanceMap.containsKey(userId)){
             return userBalances;
         }
         Map<String, Double> userBalance = balanceMap.get(userId);
         for(Map.Entry<String, Double> entry: userBalance.entrySet()){
             if(entry.getValue() > 0){
-                userBalances.add(new String[]{entry.getKey(), userId, String.valueOf(entry.getValue())});
+                userBalances.add(new Balance(entry.getKey(), userId, entry.getValue()));
             }
             else{
-                userBalances.add(new String[]{userId, entry.getKey(), String.valueOf(-entry.getValue())});
+                userBalances.add(new Balance(userId, entry.getKey(), -entry.getValue()));
             }
         }
         return userBalances;
