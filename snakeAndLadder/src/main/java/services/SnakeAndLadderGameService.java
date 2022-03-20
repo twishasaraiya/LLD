@@ -31,15 +31,11 @@ public class SnakeAndLadderGameService {
     }
 
     public void addSnakePosition(int headPosition, int tailPosition) {
-        Map<Integer, Snake> snakes = snakeAndLadderBoard.getSnakes();
-        snakes.put(headPosition, new Snake(headPosition, tailPosition));
-        snakeAndLadderBoard.setSnakes(snakes);
+        snakeAndLadderBoard.addNewSnake(headPosition, new Snake(headPosition, tailPosition));
     }
 
     public void addLadderPosition(int startPosition, int endPosition) {
-        Map<Integer, Ladder> ladders = snakeAndLadderBoard.getLadders();
-        ladders.put(startPosition, new Ladder(startPosition, endPosition));
-        snakeAndLadderBoard.setLadders(ladders);
+        snakeAndLadderBoard.addNewLadder(startPosition, new Ladder(startPosition, endPosition));
     }
 
     public void addPlayer(String playerName) {
@@ -50,26 +46,23 @@ public class SnakeAndLadderGameService {
         players.add(player);
 
         // Add player in snakeAndLadderBoard
-        Map<String, Integer> playerPieces = snakeAndLadderBoard.getPlayerPieces();
-        playerPieces.put(player.getId(), 0); //Each player has a piece which is initially kept outside the board (i.e., at position 0).
-        snakeAndLadderBoard.setPlayerPieces(playerPieces);
+        //Each player has a piece which is initially kept outside the board (i.e., at position 0).
+        snakeAndLadderBoard.addNewPlayer(player.getId(), 0);
     }
 
 
     private int getNewPositionAfterGoingThroughSnakesAndLadders(int newPosition) {
         // Iterate until there is no other snake/ladder at the tail of the snake
         // or the end position of the ladder
-        Map<Integer, Snake> snakes = snakeAndLadderBoard.getSnakes();
-        Map<Integer, Ladder> ladders = snakeAndLadderBoard.getLadders();
 
-        while(snakes.containsKey(newPosition) || ladders.containsKey(newPosition)) {
+        while(snakeAndLadderBoard.hasSnakeAtGivenPosition(newPosition) || snakeAndLadderBoard.hasLadderAtGivenPosition(newPosition)) {
             // If final position has snake head then move to the tail and update the final position
-            if(snakes.containsKey(newPosition)) {
-                newPosition = snakes.get(newPosition).getTail();
+            if(snakeAndLadderBoard.hasSnakeAtGivenPosition(newPosition)) {
+                newPosition = snakeAndLadderBoard.getSnakeTailPositionByHeadPosition(newPosition);
             }
             // If final position has ladder start position then move to the end position and update the final position
-            if(ladders.containsKey(newPosition)) {
-                newPosition = ladders.get(newPosition).getEnd();
+            if(snakeAndLadderBoard.hasLadderAtGivenPosition(newPosition)) {
+                newPosition = snakeAndLadderBoard.getLadderEndPositionByTailPosition(newPosition);
             }
         }
         return newPosition;
@@ -96,7 +89,7 @@ public class SnakeAndLadderGameService {
     }
 
     private boolean hasPlayerWon(Player player) {
-        int playerPosition = snakeAndLadderBoard.getPlayerPieces().get(player.getId());
+        int playerPosition = snakeAndLadderBoard.getCurrentPositionByPlayerName(player.getId());
         int winningPosition = snakeAndLadderBoard.getSize();
         // A player wins if it exactly reaches the position = board size and the game ends there for the given player.
         return playerPosition == winningPosition;

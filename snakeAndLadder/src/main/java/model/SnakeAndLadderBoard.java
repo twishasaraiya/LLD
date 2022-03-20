@@ -28,6 +28,19 @@ public class SnakeAndLadderBoard {
         this.snakes = snakes;
     }
 
+    public void addNewSnake(int head, Snake snake) {
+        if(snakes.containsKey(head)) return;
+        snakes.put(head, snake);
+    }
+
+    public int getSnakeTailPositionByHeadPosition(int headPosition) {
+        return snakes.get(headPosition).getTail();
+    }
+
+    public boolean hasSnakeAtGivenPosition(int headPosition) {
+        return snakes.containsKey(headPosition);
+    }
+
     public Map<Integer, Ladder> getLadders() {
         return ladders;
     }
@@ -36,11 +49,33 @@ public class SnakeAndLadderBoard {
         this.ladders = ladders;
     }
 
+    public void addNewLadder(int start, Ladder ladder) {
+        if(ladders.containsKey(start)) return;
+        ladders.put(start, ladder);
+    }
+
+    public int getLadderEndPositionByTailPosition(int startPosition) {
+        return ladders.get(startPosition).getEnd();
+    }
+
+    public boolean hasLadderAtGivenPosition(int startPosition) {
+        return ladders.containsKey(startPosition);
+    }
+
     public Map<String, Integer> getPlayerPieces() {
         return playerPieces;
     }
 
     public void setPlayerPieces(Map<String, Integer> playerPieces) {
         this.playerPieces = playerPieces;
+    }
+
+    public void addNewPlayer(String playerName, int position) {
+        if(playerPieces.containsKey(playerName)) return;
+        playerPieces.put(playerName, position);
+    }
+
+    public int getCurrentPositionByPlayerName(String playerName) {
+        return playerPieces.get(playerName);
     }
 }
