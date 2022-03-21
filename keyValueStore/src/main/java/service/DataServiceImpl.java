@@ -77,16 +77,24 @@ public class DataServiceImpl implements DataService {
             // Question: Should we delete attributes from the other map too?
             // If yes, how do we know which unique attributes to delete?
             // Bcz we dont want to delete attributes that were added via another key
-            Value attributes = store.get(key);
+
+            // key1 -> title: String
+            // key2 -> title: int       // error thrown
+            // key2 -> title: String
+            // delete key1 -> title
+            // key3 -> title: int       // system will accept
+
+
+//            Value attributes = store.get(key);
 
             // DELETE only the unique attributes that were added by this key
             // same check is added in the if condition
-            for (Map.Entry<String, Object> attribute :
-                 attributes.getEntries().entrySet()) {
-                if(uniqueAttributeNameToClassMap.containsKey(attribute.getKey()) && uniqueAttributeNameToClassMap.get(attribute.getKey()).getKey().equals(key)){
-                    uniqueAttributeNameToClassMap.remove(attribute.getKey());
-                }
-            }
+//            for (Map.Entry<String, Object> attribute :
+//                 attributes.getEntries().entrySet()) {
+//                if(uniqueAttributeNameToClassMap.containsKey(attribute.getKey()) && uniqueAttributeNameToClassMap.get(attribute.getKey()).getKey().equals(key)){
+//                    uniqueAttributeNameToClassMap.remove(attribute.getKey());
+//                }
+//            }
             store.remove(key);
         }
     }

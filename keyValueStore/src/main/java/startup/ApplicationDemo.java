@@ -78,14 +78,14 @@ public class ApplicationDemo {
     public static void testPutMethod() throws InterruptedException {
         DataService defaultStore = new DataServiceImpl();
         DataService concurrentStore = new ThreadSafeDataServiceImpl();
-        int numThreads = 5;
+        int numThreads = 10;
         for (int i = 0; i < numThreads; i++) {
             int finalI = i;
             Thread t1 = new Thread(() -> {
                 List<Map.Entry<String, String>> value = List.of(new AbstractMap.SimpleEntry("attri", String.valueOf(finalI)));
                 try {
                     // each thread inserts 100 keys
-                    for (int j = 0; j < 10; j++) {
+                    for (int j = 0; j < 100; j++) {
                         String key = "key"+ finalI + j;
                         defaultStore.put(key, value);
                         if(defaultStore.get(key) == null){
@@ -105,8 +105,8 @@ public class ApplicationDemo {
         }
 
         Thread.sleep(1000);
-        System.out.println("Final size of default hash map ( 5 threads * 10 keys ) =" + defaultStore.keys().size());
-        System.out.println("Final size of concurrent map ( 5 threads * 10 keys ) =" + concurrentStore.keys().size());
+        System.out.println("Final size of default hash map ( 10 threads * 100 keys ) =" + defaultStore.keys().size());
+        System.out.println("Final size of concurrent map ( 10 threads * 100 keys ) =" + concurrentStore.keys().size());
     }
 
     public static List<Map.Entry<String, String>> buildAttributeList(String[] inputs){

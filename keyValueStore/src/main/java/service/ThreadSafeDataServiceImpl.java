@@ -75,13 +75,13 @@ public class ThreadSafeDataServiceImpl implements DataService{
             // Should we delete attributes from the other map too?
             // If yes, how do we know which unique attributes to delete?
             // Bcz we dont want to delete attributes that were added via another key
-            Value attributes = concurrentStore.get(key);
-            for (Map.Entry<String, Object> attribute:
-                 attributes.getEntries().entrySet()){
-                if(uniqueAttributeNameToClassMap.containsKey(attribute.getKey()) && uniqueAttributeNameToClassMap.get(attribute.getKey()).getKey().equals(key)){
-                    uniqueAttributeNameToClassMap.remove(attribute.getKey());
-                }
-            }
+//            Value attributes = concurrentStore.get(key);
+//            for (Map.Entry<String, Object> attribute:
+//                 attributes.getEntries().entrySet()){
+//                if(uniqueAttributeNameToClassMap.containsKey(attribute.getKey()) && uniqueAttributeNameToClassMap.get(attribute.getKey()).getKey().equals(key)){
+//                    uniqueAttributeNameToClassMap.remove(attribute.getKey());
+//                }
+//            }
 
             concurrentStore.remove(key);
         }
