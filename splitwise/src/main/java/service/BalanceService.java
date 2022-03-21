@@ -11,10 +11,7 @@ import java.util.Objects;
 import java.util.stream.Collectors;
 
 public class BalanceService {
-
-    // paidBy -> owesTo
-    // 4 -> 1: 480 - 100
-    private Map<HashKey, Balance> balanceMap;
+    private Map<HashKey, Double> balanceMap;
     private static Boolean SIMPLIFY_BALANCE = Boolean.FALSE;
 
     public BalanceService() {
@@ -26,98 +23,43 @@ public class BalanceService {
     }
 
     public void upsertBalance(Long userId, Long owesTo, Double amount){
-        if(balanceMap.containsKey(new HashKey(userId, owesTo))){
-            updateBalance(userId, owesTo, amount);
+
+        HashKey userOwesTo = new HashKey(userId, owesTo);
+        HashKey owesToUser = new HashKey(owesTo, userId);
+
+        if(!balanceMap.containsKey(userOwesTo)){
+            balanceMap.put(userOwesTo , amount);
+            balanceMap.put(owesToUser, -1 * amount);
         }else{
-            createBalance(userId, owesTo, amount);
+            balanceMap.put(userOwesTo, balanceMap.get(userOwesTo) + amount);
+            balanceMap.put(owesToUser, balanceMap.get(owesToUser) - amount);
         }
-        reBalance(userId, owesTo); // 1-> 4   , 4 -> 1
 
         if(SIMPLIFY_BALANCE.equals(Boolean.TRUE)){
-//            simplifyBalance(userId, owesTo);
+
         }
-    }
-
-    private void updateBalance(Long userId, Long owesTo, Double amount){
-        Balance balance = balanceMap.get(new HashKey(userId, owesTo));
-        balance.setAmount(balance.getAmount() + amount);
-
-    }
-
-    private void reBalance(Long userId, Long owesTo){
-        HashKey userOwnerKey = new HashKey(userId, owesTo);
-        HashKey ownerUserKey = new HashKey(owesTo, userId);
-
-        Balance userOwnerBalance = balanceMap.getOrDefault(userOwnerKey, null);
-        Balance ownerUserBalance = balanceMap.getOrDefault(ownerUserKey, null);
-
-        if(userOwnerBalance != null && ownerUserBalance != null){
-            if(userOwnerBalance.getAmount() > ownerUserBalance.getAmount()){
-                // user 1 owesTo 2 : 480
-                // user 2 owesTo 1 : 250
-
-                // update user 1 owesTo 2 : 480 - 250 - 230
-                // remove user 2 owes to 1
-
-                userOwnerBalance.setAmount(userOwnerBalance.getAmount() - ownerUserBalance.getAmount());
-                balanceMap.remove(ownerUserKey);
-            }else {
-                // reverse of above
-                // user 1 owesTo 2 : 250
-                // user 2 owesTo 1 : 480
-
-                // update user 2 owesTo 1 : 480 - 250 - 230
-                // remove user 1 owes to 2
-                ownerUserBalance.setAmount(ownerUserBalance.getAmount() - userOwnerBalance.getAmount());
-                balanceMap.get(userOwnerKey);
-            }
-        }
-    }
-    private void createBalance(Long userId, Long owesTo, Double amount){
-        Balance balance = new Balance(userId, owesTo, amount);
-        balanceMap.put(new HashKey(userId, owesTo), balance);
     }
 
     public List<Balance> getBalanceByUserId(Long userId){
         List<Balance> balanceList = new ArrayList<>();
-        for (Balance balance:
-             balanceMap.values()) {
-            if (balance.getUserId().equals(userId) || balance.getOwesTo().equals(userId)){
-                balanceList.add(balance);
+        for (HashKey hashKey:
+             balanceMap.keySet()) {
+            if(hashKey.getUserId().equals(userId)){
+                balanceList.add(new Balance(userId, hashKey.owesToUserId, balanceMap.get(hashKey)));
             }
         }
         return balanceList;
     }
 
     public List<Balance> getAllBalance(){
-        return balanceMap.values().stream().collect(Collectors.toList());
-    }
-
-    private void simplifyBalance(Long userId, Long owesTo){
-        System.out.println("Simplifying balance for user : " + userId + " who owesTo: " + owesTo);
-        Balance userOwnsBalance = balanceMap.getOrDefault(new HashKey(userId, owesTo), null);
-
-        if(userOwnsBalance != null){
-            // find all the keys where owesTo user has some outstanding debts to other users
-            LinkedList<HashKey> hashKeys = balanceMap.keySet().stream()
-                    .filter(hashKey -> hashKey.getUserId().equals(owesTo))
-                    .collect(Collectors.toCollection(LinkedList::new));
-            System.out.println("User " + owesTo + " owesTo " + hashKeys.size() + " other users");
-            while(userOwnsBalance.getAmount() > 0 && hashKeys.size() > 0){
-                HashKey polledKey = hashKeys.poll();
-                Balance balanceToSimplify = balanceMap.get(polledKey);
-                System.out.println("User" + userId + " owes " + userOwnsBalance.getAmount() + " to user " + polledKey.getOwesToUserId());
-                if(userOwnsBalance.getAmount() <= balanceToSimplify.getAmount()){
-                    // since balance is not sufficient the record will exit but the amount will reduce
-
-                    // since the user paid for the owner to something user.....he does not owe anything now to the user
-                    break;
-                }else{
-                    // since balance is sufficient to clear the owesTo user's debt
-
-                }
+        List<Balance> balanceList = new ArrayList<>();
+        for (Map.Entry<HashKey, Double> balance:
+             balanceMap.entrySet()) {
+            if(balance.getValue() > 0){
+                balanceList.add(new Balance(balance.getKey().userId, balance.getKey().owesToUserId, balance.getValue()));
             }
         }
+        return balanceList;
     }
 
     class HashKey{

@@ -13,6 +13,7 @@ public class EqualSplitStrategy implements SplitStrategy{
         this.splitBetweenUserIds = splitBetweenUserIds;
     }
 
+
     @Override
     public Map<Long, Double> split() {
         Double amountForEachUser = (double) Math.round((amount / splitBetweenUserIds.size()) * 100) / 100;

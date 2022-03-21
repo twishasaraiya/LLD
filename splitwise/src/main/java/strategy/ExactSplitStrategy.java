@@ -7,23 +7,34 @@ import java.util.Map;
 
 public class ExactSplitStrategy implements SplitStrategy{
 
-    private List<Long> splitBetweenUserIds;
-    private List<Double> splitAmount;
+    private final Double amount;
+    private final List<Long> splitBetweenUserIds;
+    private final List<Double> splitAmountList;
 
-    public ExactSplitStrategy(List<Long> splitBetweenUserIds, List<Double> splitAmount){
+    public ExactSplitStrategy(Double amount, List<Long> splitBetweenUserIds, List<Double> splitAmountList){
+        this.amount = amount;
         this.splitBetweenUserIds = splitBetweenUserIds;
-        this.splitAmount = splitAmount;
+        this.splitAmountList = splitAmountList;
+    }
+
+    private Boolean validate(){
+        Double sum = splitAmountList.stream().reduce(0D, Double::sum);
+       return sum.equals(amount);
     }
 
     @Override
     public Map<Long, Double> split() {
-        if(splitBetweenUserIds.size() != splitAmount.size()){
+
+        if(validate().equals(Boolean.FALSE)){
+            throw new IllegalStateException("Sum of shares not equal to the total sum");
+        }
+        if(splitBetweenUserIds.size() != splitAmountList.size()){
             System.out.println("split strategy not set properly...Cannot split invalid data");
             return Collections.emptyMap(); // should an error be thrown here
         }
         HashMap<Long, Double> map = new HashMap<>();
         for (int i = 0; i < splitBetweenUserIds.size(); i++) {
-            map.put(splitBetweenUserIds.get(i), splitAmount.get(i));
+            map.put(splitBetweenUserIds.get(i), splitAmountList.get(i));
         }
         return map;
     }
