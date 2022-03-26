@@ -22,10 +22,12 @@ https://workat.tech/machine-coding/practice/design-chess-validator-to77d8oqpx2h
 - Model
   - Player --> id, playerName, color
   - Cell --> row, col, Piece
-  - Piece --> piecetype, Color, validMove()
-  - Board --> Cell[8][8], 
+  - Piece --> pieceType, colorType, isValidColorMove(), isValidMove()
+  - Board --> Cell[8][8], size
+  
 - Enum
   - PieceType
   - ColorType
+  
 - Service
-  - ChessService --> Player[], board
+  - ChessService --> Player[], board, play()
