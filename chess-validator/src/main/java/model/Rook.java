@@ -23,7 +23,7 @@ public class Rook extends Piece {
             return false;
 
         // if there is piece between start and end position then return false as Rook cannot leap over any other piece
-        if(startCoordinates[0] == endCoordinates[0]) {
+        if(startCoordinates[0] == endCoordinates[0]) { // horizontal move
             // only col changes
             int startY = endCoordinates[1] <= startCoordinates[1] ? endCoordinates[1]+1 : startCoordinates[1]+1;
             int endY = endCoordinates[1] <= startCoordinates[1] ? startCoordinates[1] : endCoordinates[1];
@@ -31,7 +31,7 @@ public class Rook extends Piece {
                 if(board.getCellAtLocation(startCoordinates[0], startY).getPiece() != null) return false;
                 startY++;
             }
-        } else if (startCoordinates[1] == endCoordinates[1]) {
+        } else if (startCoordinates[1] == endCoordinates[1]) { // vertical move
             // only row changes
             int startX = endCoordinates[0] <= startCoordinates[0] ? endCoordinates[0]+1 : startCoordinates[0]+1;
             int endX = endCoordinates[0] <= startCoordinates[0] ? startCoordinates[0] : endCoordinates[0];

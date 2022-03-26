@@ -23,8 +23,10 @@ public class King extends Piece {
         boolean isValid = false;
 
         for (int i = 0; i < dx.length; i++) {
-            if ((startCoordinates[0] + dx[i] == endCoordinates[0]) && (startCoordinates[1] + dy[i] == endCoordinates[1]))
+            if ((startCoordinates[0] + dx[i] == endCoordinates[0]) && (startCoordinates[1] + dy[i] == endCoordinates[1])) {
                 isValid = true;
+                break;
+            }
         }
 
         return isValid && isValidColorMove(start.getPiece(), end.getPiece());
