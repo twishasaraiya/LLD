@@ -3,21 +3,25 @@ package model;
 import java.util.List;
 import java.util.UUID;
 
+/**
+ * Library only consists of metadata type information about the library like numOfRacks, name, address
+ * The actual book and racks are maintained in different service
+ */
 public class Library {
     private UUID id;
-    private List<Rack> racks;
+    private Integer numRacks;
 
     // list of books
-    public Library(List<Rack> racks) {
+    public Library(Integer numRacks) {
         this.id = UUID.randomUUID();
-        this.racks = racks;
+        this.numRacks = numRacks;
     }
 
     public UUID getId() {
         return id;
     }
 
-    public List<Rack> getRacks() {
-        return racks;
+    public Integer getNumRacks() {
+        return numRacks;
     }
 }

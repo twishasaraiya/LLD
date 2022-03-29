@@ -1,14 +1,15 @@
 package model;
 
+import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 public class Book {
-    private Integer id;
-    private String title;
-    private List<String> authors;
-    private List<String> publishers;
-
-    // list book copies
+    private final Integer id;
+    private final String title;
+    private final List<String> authors;
+    private final List<String> publishers;
 
     public Book(Integer id, String title, List<String> authors, List<String> publishers) {
         this.id = id;

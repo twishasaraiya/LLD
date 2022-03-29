@@ -4,5 +4,5 @@ import model.BookBorrowDetails;
 
 public interface BorrowServiceReader {
     BookBorrowDetails getBookBorrowDetailsForBookId(Integer bookCopyId);
-    void printBorrowDetails();
+    void printBorrowDetails(Integer userId);
 }

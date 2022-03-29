@@ -2,42 +2,34 @@ package service.impl;
 
 import model.Book;
 import model.BookCopy;
-import model.Library;
 import model.Rack;
 import service.BorrowServiceWriter;
-import service.CatalogService;
 import service.LibraryManagementService;
-import service.RackService;
 
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
+import java.util.Optional;
+import java.util.stream.Collectors;
 
 public class LibraryServiceImpl implements LibraryManagementService {
-    private final CatalogService catalogService;
-    private final RackService rackService;
-    private BorrowServiceWriter borrowService;
+    private final CatalogServiceImpl catalogService;
+    private final RackServiceImpl rackService;
+    private final BorrowServiceWriter borrowService;
 
-    private Library library;
-    private Map<Integer, BookCopy> bookCopyMap;
 
     public LibraryServiceImpl() {
-        this.catalogService = new CatalogServiceImpl();
-        this.rackService = new RackServiceImpl();
+        this.catalogService = CatalogServiceImpl.getCatalogService();
+        this.rackService = RackServiceImpl.getRackService();
         this.borrowService = new BorrowServiceImpl();
-        bookCopyMap = new HashMap<>();
     }
 
     @Override
     public void createLibrary(Integer numOfRacks){
-        // TODO: Why this list is used?
-        List<Rack> rackList = new ArrayList<>();
+//        Library library = new Library(numOfRacks);
         for (int i = 1; i <= numOfRacks; i++) {
-            rackList.add(rackService.newRack(i));
+            rackService.newRack(i);
         }
-        this.library = new Library(rackList);
         System.out.println("Created library with " + numOfRacks + " racks");
     }
 
@@ -63,7 +55,6 @@ public class LibraryServiceImpl implements LibraryManagementService {
         for (Integer bookCopyId:
                 bookCopyIds) {
             BookCopy bookCopy = new BookCopy(bookCopyId, book);
-            bookCopyMap.put(bookCopyId, bookCopy);
             catalogService.updateBookCopyCatalog(book, bookCopy);
            assignedRacks.add(rackService.assignBookCopyToRack(bookCopyId).getId());
         }
@@ -76,12 +67,13 @@ public class LibraryServiceImpl implements LibraryManagementService {
         // check if bookCopyId exists in which rack
         // remove it from the rack
         // move the rack to the empty queue
+        // remove it from catalog as well
         if(!rackService.isBookAvailableOnRack(bookCopyId)){
             System.out.println("Invalid book copy id");
             return;
         }
 
-        // TODO: remove from catalog service
+        catalogService.removeBookCopy(bookCopyId);
         Rack rack = rackService.removeBookCopyFromRack(bookCopyId);
         System.out.println("Removed book copy: " + bookCopyId + " from rack: " + rack.getId());
     }
@@ -96,7 +88,7 @@ public class LibraryServiceImpl implements LibraryManagementService {
         // check if there is a book copy for bookId in any of the racks
         // return / print the rack no
 
-        if(catalogService.containsBookId(bookId)){
+        if(!catalogService.containsBookId(bookId)){
             System.out.println("Invalid Book ID");
             return;
         }
@@ -106,12 +98,18 @@ public class LibraryServiceImpl implements LibraryManagementService {
             return;
         }
 
-        // TODO: Return closest rack value
-        for (BookCopy bookCopy:
-                catalogService.getAllBookCopiesForBook(bookId)) {
-            if(rackService.isBookAvailableOnRack(bookCopy.getId())){
-                borrow(userId, bookCopy.getId(), dueDate);
-            }
+
+        Optional<Rack> rack = rackService.getClosestBookCopy(
+                catalogService.getAllBookCopiesForBook(bookId)
+                .stream()
+                .map(BookCopy::getId)
+                .collect(Collectors.toList())
+        );
+
+        if(rack.isPresent()){
+            borrow(userId, rack.get().getBookCopyId(), dueDate);
+        }else{
+            System.out.println("Not available");
         }
     }
 
@@ -124,7 +122,6 @@ public class LibraryServiceImpl implements LibraryManagementService {
         // maintain a map of userId to list of books borrowed
 
         // return / print the rack no
-
         if(!rackService.isBookAvailableOnRack(bookCopyId)){
             System.out.println("Invalid Book Copy ID");
             return;
@@ -145,7 +142,7 @@ public class LibraryServiceImpl implements LibraryManagementService {
         // move book copy back to a rack for availability
 
         // TODO: Optimize multiple map issue
-        if(!bookCopyMap.containsKey(bookCopyId)){
+        if(!catalogService.containsBookCopyId(bookCopyId)){
             System.out.println("Invalid Book Copy ID");
             return;
         }
@@ -155,9 +152,7 @@ public class LibraryServiceImpl implements LibraryManagementService {
 
     @Override
     public void printBorrowed(Integer userId) {
-        // print the value of the map user -> books borrowed
-        // TODO: Pending
-        borrowService.printBorrowDetails();
+        borrowService.printBorrowDetails(userId);
     }
 
     @Override

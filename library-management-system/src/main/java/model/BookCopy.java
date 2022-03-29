@@ -2,8 +2,8 @@ package model;
 
 
 public class BookCopy {
-    private Integer id;
-    private Book book;
+    private final Integer id;
+    private final Book book;
 
     public BookCopy(Integer id, Book bookId) {
         this.id = id;

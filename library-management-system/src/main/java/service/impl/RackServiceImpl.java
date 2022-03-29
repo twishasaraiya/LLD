@@ -1,22 +1,40 @@
 package service.impl;
 
 import model.Rack;
-import service.RackService;
 
+import java.util.Comparator;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+import java.util.Objects;
+import java.util.Optional;
 import java.util.PriorityQueue;
 import java.util.Queue;
+import java.util.Set;
+import java.util.TreeSet;
 
-public class RackServiceImpl implements RackService {
+/**
+ * SINGLETON since all the properties are static
+ */
+public class RackServiceImpl{
     private static Queue<Rack> emptyRackQueue;
+    // using tree since we want to borrow book copy from the closest rack
     private static Map<Integer, Rack> bookCopyIdToRackMap;
 
-    public RackServiceImpl() {
+    private static RackServiceImpl rackService = null;
+
+    private RackServiceImpl() {
         // sorted by number in ascending order
         this.emptyRackQueue = new PriorityQueue<>();
         this.bookCopyIdToRackMap = new HashMap<>();
 
+    }
+
+    public static RackServiceImpl getRackService(){
+        if(rackService == null){
+            return new RackServiceImpl();
+        }
+        return rackService;
     }
 
     public Boolean isRackAvailableForBooks(Integer numBooks){
@@ -54,5 +72,19 @@ public class RackServiceImpl implements RackService {
         emptyRackQueue.add(rack);
         bookCopyIdToRackMap.remove(bookCopyId);
         return rack;
+    }
+
+    public Optional<Rack> getClosestBookCopy(List<Integer> bookCopyIds){
+        return bookCopyIds
+                .stream()
+                .map(bookCopyId -> bookCopyIdToRackMap.getOrDefault(bookCopyId,null))
+                .filter(Objects::nonNull)
+                .sorted(new Comparator<Rack>() {
+                    @Override
+                    public int compare(Rack o1, Rack o2) {
+                        return o1.compareTo(o2);
+                    }
+                })
+                .findFirst();
     }
 }

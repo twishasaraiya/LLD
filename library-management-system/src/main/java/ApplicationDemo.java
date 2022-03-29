@@ -56,17 +56,17 @@ public class ApplicationDemo {
                     libraryManagementService.borrowBook(bookId, userId, dueDate);
                     break;
                 case BORROW_BOOK_COPY:
-                    bookCopyId = Integer.valueOf(stringTokenizer.nextToken());
+                    bookCopyId = extractIds("book_copy",stringTokenizer.nextToken());
                     userId = extractIds("user", stringTokenizer.nextToken());
                     dueDate = DATE_FORMAT.parse(stringTokenizer.nextToken());
                     libraryManagementService.borrowBookCopy(bookCopyId, userId, dueDate);
                     break;
                 case RETURN_BOOK_COPY:
-                    bookCopyId = Integer.valueOf(stringTokenizer.nextToken());
+                    bookCopyId = extractIds("book_copy",stringTokenizer.nextToken());
                     libraryManagementService.returnBookCopy(bookCopyId);
                     break;
                 case PRINT_BORROWED:
-                    userId = Integer.valueOf(stringTokenizer.nextToken());
+                    userId = extractIds("user", stringTokenizer.nextToken());
                     libraryManagementService.printBorrowed(userId);
                     break;
                 case SEARCH:

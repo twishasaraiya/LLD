@@ -5,8 +5,6 @@ import model.BookBorrowDetails;
 import model.BookCopy;
 import model.Rack;
 import service.BorrowServiceReader;
-import service.CatalogService;
-import service.RackService;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -16,21 +14,36 @@ import java.util.Map;
 import java.util.PriorityQueue;
 import java.util.Queue;
 
-public class CatalogServiceImpl implements CatalogService {
+/**
+ * SINGLETON since all the properties are static
+ */
+public class CatalogServiceImpl {
 
-    // NEEDS TO BRAINSTORM: ON how to improve this
     private static Map<Integer, Book> bookMap;
+    private static Map<Integer, BookCopy> bookCopyMap;
     private static Map<Integer, Integer> bookCopyIdToBookIdMap;
     private static Map<Integer, List<BookCopy>> bookIdToBookCopiesMap;
 
-    private RackService rackService; // PRINT
-    private BorrowServiceReader borrowService; // PRINT
+    private final RackServiceImpl rackService; // PRINT
+    private final BorrowServiceReader borrowService; // PRINT
 
-    public CatalogServiceImpl() {
-        bookMap = new HashMap<>();
+    private static CatalogServiceImpl catalogService = null;
+
+    private CatalogServiceImpl() {
+        this.bookMap = new HashMap<>();
+        this.bookCopyMap = new HashMap<>();
+        this.bookCopyIdToBookIdMap = new HashMap<>();
         this.bookIdToBookCopiesMap = new HashMap<>();
-        this.rackService = new RackServiceImpl();
+        this.rackService = RackServiceImpl.getRackService();
         this.borrowService = new BorrowServiceImpl();
+        this.catalogService = this;
+    }
+
+    public static CatalogServiceImpl getCatalogService(){
+        if(catalogService == null){
+            return new CatalogServiceImpl();
+        }
+        return catalogService;
     }
 
     public Boolean containsBookId(Integer bookId){
@@ -45,19 +58,26 @@ public class CatalogServiceImpl implements CatalogService {
         bookMap.put(book.getId(), book);
     }
 
+    public Boolean containsBookCopyId(Integer bookCopyId){
+        return bookCopyMap.containsKey(bookCopyId);
+    }
+
     public void removeBookCopy(Integer bookCopyId){
+        Integer bookId = bookCopyIdToBookIdMap.get(bookCopyId);
+        BookCopy bookCopy = bookCopyMap.get(bookCopyId);
+        bookCopyMap.remove(bookCopyId);
         bookCopyIdToBookIdMap.remove(bookCopyId);
+        bookIdToBookCopiesMap.get(bookId).remove(bookCopy);
     }
 
     public void updateBookCopyCatalog(Book book, BookCopy bookCopy){
-//        bookCopyIdToBookIdMap.put(bookCopy.getId(), book.getId());
-        if(bookIdToBookCopiesMap.containsKey(book.getId())){
-            bookIdToBookCopiesMap.get(book.getId()).add(bookCopy);
-        }else{
-            List<BookCopy> bookCopies = new ArrayList<>();
-            bookCopies.add(bookCopy);
-            bookIdToBookCopiesMap.put(book.getId(), bookCopies);
+        bookCopyMap.put(bookCopy.getId(), bookCopy);
+        bookCopyIdToBookIdMap.put(bookCopy.getId(), book.getId());
+
+        if(!bookIdToBookCopiesMap.containsKey(book.getId())){
+            bookIdToBookCopiesMap.put(book.getId(), new ArrayList<>());
         }
+        bookIdToBookCopiesMap.get(book.getId()).add(bookCopy);
     }
 
     public void search(String attribute, String value) {
@@ -169,7 +189,7 @@ public class CatalogServiceImpl implements CatalogService {
 
         private void printBorrowDetails(){
             if(bookBorrowDetails != null)
-                System.out.print(bookBorrowDetails.getUserId() + " " + bookBorrowDetails.getDueDate());
+                System.out.print(" " + bookBorrowDetails.getUserId() + " " + bookBorrowDetails.getDueDate());
         }
 
         @Override
@@ -177,6 +197,4 @@ public class CatalogServiceImpl implements CatalogService {
             return getRackNumber().compareTo(o.getRackNumber());
         }
     }
-
-
 }

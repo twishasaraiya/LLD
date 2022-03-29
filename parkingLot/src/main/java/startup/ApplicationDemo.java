@@ -11,7 +11,6 @@ import java.io.InputStreamReader;
 
 /**
  * https://leetcode.com/discuss/interview-question/object-oriented-design/1749860/Parking-Lot-Design-or-workattech-or-Review-Appreciated
- * TODO
  * 1. Apply different design pattern
  * 2. Thread safe??
  */

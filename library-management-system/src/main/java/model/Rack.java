@@ -2,7 +2,7 @@ package model;
 
 
 public class Rack implements Comparable<Rack>{
-    private Integer id;// 1 , 2, 3, 4
+    private final Integer id;// 1 , 2, 3, 4
     private Integer bookCopyId;
 
     public Rack(Integer id) {
