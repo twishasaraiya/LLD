@@ -10,6 +10,8 @@
     <option name="ignoredFiles">
       <set>
         <option value="$PROJECT_DIR$/abcd/pom.xml" />
+        <option value="$PROJECT_DIR$/message-queue/pom.xml" />
+        <option value="$PROJECT_DIR$/multithreading/pom.xml" />
       </set>
     </option>
   </component>

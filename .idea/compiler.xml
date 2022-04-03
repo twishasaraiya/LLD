@@ -6,15 +6,18 @@
         <sourceOutputDir name="target/generated-sources/annotations" />
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
-        <module name="snakeAndLadder" />
         <module name="ticTacToe" />
         <module name="wordle" />
         <module name="parkingLot" />
+        <module name="snakeAndLadder" />
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel>
+      <module name="2048-game" target="11" />
       <module name="abcd" target="11" />
-      <module name="snakeAndLadder" target="7" />
+      <module name="message-queue" target="11" />
+      <module name="multithreading" target="11" />
+      <module name="splitwise" target="11" />
     </bytecodeTargetLevel>
   </component>
 </project>
