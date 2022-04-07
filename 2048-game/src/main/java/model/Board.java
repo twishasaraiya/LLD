@@ -63,7 +63,7 @@ public class Board {
         int xx, yy;
         for(int[] dir: dirs){
             xx = x + dir[0];
-            yy = y + dir[0];
+            yy = y + dir[1];
             if(inBoard(xx, yy) && board[xx][yy].value == board[x][y].value){
                 return true;
             }
