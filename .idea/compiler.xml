@@ -6,15 +6,16 @@
         <sourceOutputDir name="target/generated-sources/annotations" />
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
-        <module name="snakeAndLadder" />
         <module name="ticTacToe" />
+        <module name="vending-machine" />
         <module name="wordle" />
         <module name="parkingLot" />
+        <module name="snakeAndLadder" />
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel>
       <module name="abcd" target="11" />
-      <module name="snakeAndLadder" target="7" />
+      <module name="library-management-system" target="11" />
     </bytecodeTargetLevel>
   </component>
 </project>
