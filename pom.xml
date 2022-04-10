@@ -18,6 +18,23 @@
         <module>keyValueStore</module>
         <module>2048-game</module>
         <module>splitwise</module>
+        <module>amazon-locker-service</module>
+        <module>car-rental</module>
+        <module>logger</module>
+        <module>ID-generator</module>
+        <module>cab-booking</module>
+        <module>online-book-reader-system</module>
+        <module>hotel-booking-system</module>
+        <module>logistics</module>
+        <module>configuration-management-system</module>
+        <module>vending-machine</module>
+        <module>map-navigator</module>
+        <module>json-parser</module>
+        <module>cricinfo</module>
+        <module>pininterest</module>
+        <module>tiktok</module>
+        <module>movie-ticket-booking</module>
+        <module>swiggy</module>
     </modules>
 
     <properties>
