@@ -11,6 +11,7 @@
     <modules>
         <module>parkingLot</module>
         <module>wordle</module>
+        <module>trello</module>
         <module>chess-validator</module>
         <module>snakeAndLadder</module>
         <module>ticTacToe</module>

@@ -6,6 +6,7 @@
         <sourceOutputDir name="target/generated-sources/annotations" />
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
+        <module name="trello" />
         <module name="snakeAndLadder" />
         <module name="ticTacToe" />
         <module name="wordle" />
@@ -16,7 +17,6 @@
     </annotationProcessing>
     <bytecodeTargetLevel>
       <module name="abcd" target="11" />
-      <module name="snakeAndLadder" target="7" />
     </bytecodeTargetLevel>
   </component>
 </project>
