@@ -10,6 +10,7 @@
         <module name="snakeAndLadder" />
         <module name="ticTacToe" />
         <module name="wordle" />
+        <module name="keyValueStore" />
         <module name="parkingLot" />
         <module name="chess-validator" />
         <module name="2048-game" />
@@ -17,6 +18,7 @@
     </annotationProcessing>
     <bytecodeTargetLevel>
       <module name="abcd" target="11" />
+      <module name="snakeAndLadder" target="11" />
     </bytecodeTargetLevel>
   </component>
 </project>

@@ -15,6 +15,7 @@
         <module>chess-validator</module>
         <module>snakeAndLadder</module>
         <module>ticTacToe</module>
+        <module>keyValueStore</module>
         <module>2048-game</module>
     </modules>
 
