@@ -15,6 +15,7 @@
         <module name="snakeAndLadder" />
         <module name="chess-validator" />
         <module name="2048-game" />
+        <module name="splitwise" />
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel>

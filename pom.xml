@@ -17,6 +17,7 @@
         <module>ticTacToe</module>
         <module>keyValueStore</module>
         <module>2048-game</module>
+        <module>splitwise</module>
     </modules>
 
     <properties>
