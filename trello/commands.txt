@@ -1,0 +1,190 @@
+SHOW
+- No boards
+
+
+BOARD CREATE work@tech
+- Created board: 5da1583ec25d2a7e246b0375
+
+
+SHOW BOARD 5da1583ec25d2a7e246b0375
+- {"id": "5da1583ec25d2a7e246b0375", "name": "work@tech", "privacy": "PUBLIC"}
+
+
+SHOW
+- [{"id": "5da1583ec25d2a7e246b0375", "name": "work@tech", "privacy": "PUBLIC"}]
+
+
+BOARD 5da1583ec25d2a7e246b0375 name workat.tech
+// update name with "workat.tech" for boardId=5da1583ec25d2a7e246b0375
+
+
+BOARD 5da1583ec25d2a7e246b0375 privacy PRIVATE
+// update privacy with "PRIVATE" for boardId=5da1583ec25d2a7e246b0375
+
+
+SHOW BOARD 5da1583ec25d2a7e246b0375
+- {"id": "5da1583ec25d2a7e246b0375", "name": "workat.tech", "privacy": "PRIVATE"}
+
+
+BOARD CREATE workat
+- Created board: 5da1586caaaad00d9b2d7aa6
+
+
+SHOW
+- [
+    {"id": "5da1583ec25d2a7e246b0375", "name": "workat.tech", "privacy": "PRIVATE"},
+    {"id": "5da1586caaaad00d9b2d7aa6","name": "workat", "privacy": "PUBLIC"}
+  ]
+
+
+BOARD 5da1583ec25d2a7e246b0375 ADD_MEMBER user1
+// add member=user1 in boardId=5da1583ec25d2a7e246b0375
+
+
+BOARD 5da1583ec25d2a7e246b0375 ADD_MEMBER user2
+// add member=user2 in boardId=5da1583ec25d2a7e246b0375
+
+
+BOARD 5da1583ec25d2a7e246b0375 ADD_MEMBER user3
+// add member=user3 in boardId=5da1583ec25d2a7e246b0375
+
+
+BOARD 5da1583ec25d2a7e246b0375 REMOVE_MEMBER user2
+// remove member=user2 from boardId=5da1583ec25d2a7e246b0375
+
+
+SHOW BOARD 5da1583ec25d2a7e246b0375
+- {
+    "id": "5da1583ec25d2a7e246b0375", "name": "workat.tech", "privacy": "PRIVATE",
+    "members": [
+        {"id": "user1", "name":"Gaurav Chandak", "email": "gaurav@workat.tech"},
+        {"id": "user3", "name": "Sagar Jain", "email":"sagar@workat.tech"}
+    ]
+  }
+
+
+BOARD DELETE 5da1586caaaad00d9b2d7aa6
+// delete board with boardId=5da1583ec25d2a7e246b0375
+
+
+SHOW BOARD 5da1586caaaad00d9b2d7aa6
+- Board 5da1586caaaad00d9b2d7aa6 does not exist
+
+
+SHOW
+- [
+    {"id": "5da1583ec25d2a7e246b0375", "name": "workat.tech", "privacy": "PRIVATE",
+        "members": [
+            {"id": "user1", "name":"Gaurav Chandak", "email": "gaurav@workat.tech"},
+            {"id": "user3", "name": "Sagar Jain", "email":"sagar@workat.tech"}
+        ]
+    }
+  ]
+
+
+LIST CREATE 5da1583ec25d2a7e246b0375 Mock Interviews
+- Created list: 5da1583547c78c15a1408df2
+
+
+SHOW LIST 5da1583547c78c15a1408df2
+- {"id": "5da1583547c78c15a1408df2", "name": "Mock Interviews"}
+
+
+LIST 5da1583547c78c15a1408df2 name Mock Interviews - Applied
+// update name=Mock Interviews - Applied for listId=5da1583547c78c15a1408df2
+
+
+SHOW LIST 5da1583547c78c15a1408df2
+- {"id": "5da1583547c78c15a1408df2", "name": "Mock Interviews - Applied"}
+
+
+LIST CREATE 5da1583ec25d2a7e246b0375 Mock Interviews - Scheduled
+- Created list: 5da1583547c78c15a143hj34
+
+
+SHOW BOARD 5da1583ec25d2a7e246b0375
+- {
+    "id": "5da1583ec25d2a7e246b0375", "name": "workat.tech", "privacy": "PRIVATE",
+    "lists"": [
+        {"id":"5da1583547c78c15a1408df2", "name": "Mock Interviews - Applied"},
+        {"id": "5da1583547c78c15a143hj34", "name": "MockInterviews - Scheduled"}
+    ],
+    "members": [
+        {"id": "user1", "name": "Gaurav Chandak", "email": "gaurav@workat.tech"},
+        {"id": "user3", "name": "Sagar Jain", "email": "sagar@workat.tech"}
+    ]
+  }
+
+
+CARD CREATE 5da1583547c78c15a1408df2 abcd@gmail.com
+- Created card: 5da1583547c78c15a14kjsd8
+
+
+CARD CREATE 5da1583547c78c15a1408df2 abcda@gmail.com
+- Created card: 5da1583547c78c15a14kj78g
+
+
+SHOW LIST 5da1583547c78c15a1408df2
+- {
+    "id": "5da1583547c78c15a1408df2", "name": "Mock Interviews - Applied",
+    "cards": [
+        {"id": "5da1583547c78c15a14kjsd8","name": "abcd@gmail.com"},
+        {"id": "5da1583547c78c15a14kj78g", "name": "abcda@gmail.com"}
+    ]
+  }
+
+
+CARD 5da1583547c78c15a14kj78g name abcde@gmail.com
+// update name of the card=abcde@gmail.com for cardId=5da1583547c78c15a14kj78g
+
+
+CARD 5da1583547c78c15a14kj78g description At 7PM
+// update description of the card="At 7PM" for cardId=5da1583547c78c15a14kj78g
+
+SHOW LIST 5da1583547c78c15a1408df2
+- {
+    "id": "5da1583547c78c15a1408df2", "name": "Mock Interviews - Applied",
+    "cards": [
+        {"id": "5da1583547c78c15a14kjsd8","name": "abcd@gmail.com"},
+        {"id": "5da1583547c78c15a14kj78g", "name": "abcde@gmail.com", "description": "At 7PM"}
+    ]
+  }
+
+
+CARD 5da1583547c78c15a14kjsd8 ASSIGN gaurav@workat.tech
+// assign user with email=gaurav@workat.tech for cardId=5da1583547c78c15a14kjsd8
+
+
+SHOW CARD 5da1583547c78c15a14kjsd8
+- {"id": "5da1583547c78c15a14kjsd8", "name": "abcd@gmail.com", "assignedTo": "gaurav@workat.tech"}
+
+
+CARD 5da1583547c78c15a14kjsd8 MOVE 5da1583547c78c15a143hj34
+// move card with cardId=5da1583547c78c15a14kjsd8 to list with listId=5da1583547c78c15a143hj34
+
+SHOW LIST 5da1583547c78c15a1408df2
+- {
+    "id": "5da1583547c78c15a1408df2", "name": "Mock Interviews - Applied",
+    "cards": [
+        {"id": "5da1583547c78c15a14kj78g","name": "abcde@gmail.com", "description": "At 7PM"}
+    ]
+  }
+
+
+SHOW LIST 5da1583547c78c15a143hj34
+- {
+    "id": "5da1583547c78c15a143hj34", "name": "Mock Interviews - Scheduled",
+    "cards": [
+        {"id":"5da1583547c78c15a14kjsd8", "name": "abcd@gmail.com", "assignedTo": "gaurav@workat.tech"}
+    ]
+  }
+
+
+CARD 5da1583547c78c15a14kjsd8 UNASSIGN
+// unassign user with null for cardId=5da1583547c78c15a14kjsd8
+
+SHOW CARD 5da1583547c78c15a14kjsd8
+- {"id": "5da1583547c78c15a14kjsd8", "name": "abcd@gmail.com"}
+
+SHOW
+
