@@ -7,15 +7,14 @@
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
         <module name="trello" />
+        <module name="snakeAndLadder" />
+        <module name="ticTacToe" />
         <module name="wordle" />
         <module name="parkingLot" />
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel>
       <module name="abcd" target="11" />
-      <module name="snakeAndLadder" target="7" />
-      <module name="ticTacToe" target="11" />
-      <module name="truecaller" target="11" />
     </bytecodeTargetLevel>
   </component>
 </project>
