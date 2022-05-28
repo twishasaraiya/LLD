@@ -1,22 +1,22 @@
+import model.Request;
+import services.GatewayService;
+
 import java.util.Random;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 public class Runner {
 
     public static void main(String[] args) throws InterruptedException {
-        Random random = new Random();
-        RateLimiter rateLimiter = new RateLimiter(1);
+        GatewayService gateway = new GatewayService();
 
-        String requestId = "xqf-123";
+        Request request = new Request("request-123");
 
-        while (true){
-            if(rateLimiter.allowRequest()){
-                System.out.println("Request Allowed!");
-            }
-            else{
-                System.out.println("Request Blocked!");
-            }
-            long sleepTime = random.nextInt(10) * 100;
-            Thread.sleep(sleepTime);
+        ExecutorService pool = Executors.newFixedThreadPool(12);
+
+        for(int i=0; i<12; i++){
+            pool.submit(() -> gateway.processRequest(request));
         }
+        pool.shutdown();
     }
 }
