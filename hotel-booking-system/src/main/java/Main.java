@@ -78,9 +78,9 @@ class Reservation{
     private BookingStatus bookingStatus;
     private Map<String, Object> metadata;
 
-    public Reservation(User user, RoomType roomType, int quantity, Date startDate, Date endDate) {
+    public Reservation(User user, RoomType roomType, List<Integer> roomIds, Date startDate, Date endDate) {
         this.user = user;
-        this.roomBooking = new RoomBooking(roomType, quantity, startDate, endDate)
+        this.roomBooking = new RoomBooking(roomType, roomIds, startDate, endDate);
         this.bookingStatus = BookingStatus.NOT_PAID;
     }
 
@@ -104,6 +104,10 @@ class RoomBooking{
         this.roomIds = roomIds;
         this.startDate = startDate;
         this.endDate = endDate;
+    }
+
+    public List<Integer> getRoomIds() {
+        return roomIds;
     }
 
     public Date getStartDate() {
