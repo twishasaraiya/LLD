@@ -1,39 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="CompilerConfiguration">
-    <annotationProcessing>
-      <profile name="Maven default annotation processors profile" enabled="true">
-        <sourceOutputDir name="target/generated-sources/annotations" />
-        <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
-        <outputRelativeToContentRoot value="true" />
-        <module name="trello" />
-        <module name="ticTacToe" />
-        <module name="parkingLot" />
-        <module name="logger" />
-        <module name="keyValueStore" />
-        <module name="logistics" />
-        <module name="map-navigator" />
-        <module name="ID-generator" />
-        <module name="2048-game" />
-        <module name="swiggy" />
-        <module name="configuration-management-system" />
-        <module name="tiktok" />
-        <module name="movie-ticket-booking" />
-        <module name="splitwise" />
-        <module name="cricinfo" />
-        <module name="wordle" />
-        <module name="car-rental" />
-        <module name="json-parser" />
-        <module name="amazon-locker-service" />
-        <module name="vending-machine" />
-        <module name="pininterest" />
-        <module name="snakeAndLadder" />
-        <module name="online-book-reader-system" />
-        <module name="chess-validator" />
-        <module name="cab-booking" />
-        <module name="hotel-booking-system" />
-      </profile>
-    </annotationProcessing>
     <bytecodeTargetLevel>
       <module name="abcd" target="11" />
       <module name="LLD" target="11" />
