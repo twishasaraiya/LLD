@@ -24,6 +24,7 @@
         <module name="wordle" />
         <module name="car-rental" />
         <module name="json-parser" />
+        <module name="rate-limiter" />
         <module name="amazon-locker-service" />
         <module name="vending-machine" />
         <module name="pininterest" />
