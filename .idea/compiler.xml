@@ -31,6 +31,7 @@
         <module name="online-book-reader-system" />
         <module name="chess-validator" />
         <module name="cab-booking" />
+        <module name="in-memory-cache" />
         <module name="hotel-booking-system" />
       </profile>
     </annotationProcessing>
@@ -39,6 +40,7 @@
       <module name="LLD" target="11" />
       <module name="message-queue" target="11" />
       <module name="multithreading" target="11" />
+      <module name="rate-limiter" target="11" />
       <module name="truecaller" target="11" />
     </bytecodeTargetLevel>
   </component>

@@ -35,6 +35,7 @@
         <module>tiktok</module>
         <module>movie-ticket-booking</module>
         <module>swiggy</module>
+        <module>in-memory-cache</module>
     </modules>
 
     <properties>
