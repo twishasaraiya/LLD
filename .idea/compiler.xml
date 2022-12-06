@@ -41,7 +41,6 @@
       <module name="LLD" target="11" />
       <module name="message-queue" target="11" />
       <module name="multithreading" target="11" />
-      <module name="rate-limiter" target="11" />
       <module name="truecaller" target="11" />
     </bytecodeTargetLevel>
   </component>
