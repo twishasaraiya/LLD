@@ -21,6 +21,7 @@
         <module name="movie-ticket-booking" />
         <module name="splitwise" />
         <module name="cricinfo" />
+        <module name="facebook-feed" />
         <module name="wordle" />
         <module name="car-rental" />
         <module name="json-parser" />

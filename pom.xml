@@ -37,6 +37,7 @@
         <module>swiggy</module>
         <module>rate-limiter</module>
         <module>in-memory-cache</module>
+        <module>facebook-feed</module>
     </modules>
 
     <properties>
